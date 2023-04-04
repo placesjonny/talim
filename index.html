@@ -14,8 +14,1031 @@
   </style>
     <script src="p5.js"></script>
 <script>
-let x_padding,y_padding,x_start=20,y_start=20,w_mult=10,start_w=600,start_h=800,color_palettes,texts,palette,message,has_message=!0,has_pattern=!0,pattern_random,pattern_functions=[pattern_1,pattern_2,pattern_3,pattern_4,pattern_5,pattern_6,pattern_7],pattern_filled=!0,chosen_pattern,has_unfilled=!0,chosen_pattern_unfilled,grid_c,grid_r,font,bounds;function preload(){font=loadFont(base64Font)}let scale_variable,tokenData=genTokenData(Math.floor(900*Math.random())),hash=tokenData.hash,projectNumber=Math.floor(parseInt(tokenData.tokenId)/1e6),mintNumber=parseInt(tokenData.tokenId)%1e6,R,c_b,c_c,c_d,c_f,c_t,c_s,baseHue,baseSat,baseBright,pattern_pal;function generateColor(A,t,e,$){let B=random(e[0],e[1]),a=random($[0],$[1]);return[(A+t)%360,B,a,1]}function getPatternPalette(A,t){let e=[120,0,120],$=e[A%e.length];return generateColor(t,$,[55,55],[65,65])}function generatePalette(){let A=random(0,290),t=generateColor(A,0,[40,40],[65,65]),e=generateColor(A,0,[60,75],[60,80]),$=generateColor(A,315,[35,35],[90,90]),B=generateColor(A,240,[45,45],[60,60]),a=generateColor(A,45,[15,15],[95,95]);return{base:t,creases:e,frame:e,detail:$,text:B,shade:a}}function setup(){colorMode(HSB,360,100,100,1),randomSeed(100*mintNumber),(R=new Random).random_dec(),R.random_num(0,10),R.random_int(0,10),R.random_bool(.5),R.random_choice([1,2,3]),texts={yalla:{text:String.fromCodePoint(33,65276,65267),multiplier:.25},akeed:{text:String.fromCodePoint(1567,65194,65268,65243,1571),multiplier:.35},tamam:{text:String.fromCodePoint(65249,65166,65252,65175),multiplier:.25},maleeh:{text:String.fromCodePoint(65186,65268,65248,65251),multiplier:.25},taal:{text:String.fromCodePoint(33,65245,65166,65228,65175),multiplier:.25},habibi:{text:String.fromCodePoint(65266,65170,65268,65170,65187),multiplier:.35},mama:{text:String.fromCodePoint(65166,65251,65166,65251),multiplier:.25}},color_palettes={basic:{base:[46,20,73.3,1],creases:[46,20,33.3,1],frame:[46,20,33.3,1],detail:[46,20,20,1],text:[190,86,65,1]},green:{base:[78,19,63,1],creases:[79,23,39],frame:[79,23,39],detail:[273,5,96,1],text:[357,47,76,1]},sand:{base:[39,15,78,1],creases:[28,27,41],frame:[28,27,41],detail:[86,97,46,1],text:[7,50,96,1]},yellow:{base:[38,45,91,1],creases:[39,76,56],frame:[39,76,56],detail:[186,8,98,1],text:[201,92,70,1]},black:{base:[60,3,54,1],creases:[120,3,15],frame:[120,3,15],detail:[187,16,95,1],text:[120,3,15,1]},blue:{base:[201,55,80,1],creases:[201,88,40],frame:[201,88,40],detail:[352,65,82,1],text:[240,2,100,1]},white:{base:[60,2,93,1],creases:[30,21,70],frame:[30,21,70],detail:[352,65,82,1],text:[167,50,78,1]},random:{base:[60,2,93,1],creases:[30,21,70],frame:[30,21,70],detail:[352,65,82,1],text:[167,50,78,1],shade:[167,50,78,1]}},createCanvas(600,800),noLoop(),pixelDensity(2),x_padding=10,y_padding=5,angleMode(DEGREES),pattern_random=randomGaussian(0,20),palette=color_palettes.random,has_message=R.random_bool(.85),textFont(font);let A=[];has_message&&(A=(message=R.random_choice([texts.habibi,texts.akeed,texts.yalla,texts.tamam,texts.taal,texts.maleeh,texts.mama])).text,pts=font.textToPoints(A,0,0,150,{sampleFactor:.1,simplifyThreshold:0}),grid_c=R.random_int(1,3),grid_r=R.random_int(1,5)),has_pattern=R.random_bool(.85),has_unfilled=R.random_bool(.25),has_pattern&&(chosen_pattern=R.random_int(0,5)),has_unfilled&&(chosen_pattern_unfilled=R.random_int(0,5)),pattern_filled=R.random_bool(.5),bounds=font.textBounds(A,0,0,150),scale_variable=1;let t=generatePalette();pattern_pal=[getPatternPalette(0,baseHue=(c_b=t.base)[0]),getPatternPalette(1,baseHue),getPatternPalette(2,baseHue)],c_c=[c_b[0],c_b[1]+20,c_b[2]-25],c_d=t.detail,c_f=[c_b[0],c_b[1]+20,c_b[2]-40],c_t=t.text,c_s=t.shade,color_palettes.random.base=c_b,color_palettes.random.creases=c_c,color_palettes.random.frame=c_f,color_palettes.random.detail=c_d,color_palettes.random.text=c_t,color_palettes.random.shade=c_s}function draw(){background("#FFF"),translate(-7.5,-7.5),noFill();let A=[];if(has_message){for(let t=0;t<pts.length;t++){let e=pts[t];A.push(createVector(e.x+start_w/2-bounds.w/2,e.y+start_h/2))}let $=grid_c,B=grid_r,a=multiplySingleVectorArray(A,scale_variable-message.multiplier*($-1)*scale_variable),r=[],g=createGrid($,B,start_h,start_w);print(g);for(let l=0;l<g.length;l++){let n=g[l];r=r.concat(centerSingleVectorArray(a,n))}A=r}yarn_creases(),strokeWeight(.5);let s=0,c=0;for(let Q=x_start;Q<start_w-x_start;Q+=x_padding)for(let i=y_start;i<start_h-y_start;i+=y_padding){let o=w_mult*noise(.005*i,.005*Q),E=1*noise(.005*i,.005*Q),I=noise((i+o)*.05),w=createVector(Q+o+E,i+o+3*I),_=createVector(Q+o+E,i+o+5+3*I);s%2==0&&(w.x+=.5*x_padding,_.x+=.5*x_padding),p_lines("v",w,_,!1,A),s++}for(let C=x_start+.5*x_padding;C<start_w-x_start;C+=x_padding)for(let x=y_start;x<start_h-y_start;x+=y_padding){let F=w_mult*noise(.005*x,.005*C),G=1*noise(.005*C,.005*x),d=noise((x+F)*.05),h=createVector(C+F,x+F+G+3*d),M=createVector(C+F+5,x+F+G+3*d);c%2==0&&(h.x-=.5*x_padding,M.x-=.5*x_padding),p_lines("h",h,M,!1,A),c++}create_frame()}function yarn_creases(){for(y=y_start;y<start_h-y_start;y+=.5){let A=.5*w_mult*noise(.005*y,.005*x_start),t=.5*w_mult*noise(.005*y,(start_w-x_start)*.005);strokeWeight(2),stroke(palette.creases[0]+randomGaussian(0,2),palette.creases[1],palette.creases[2]+randomGaussian(0,5)+10*noise(.05*y)),line_of_yarn_bg(createVector(x_start+A,y+A+2),createVector(start_w-x_start+t+4,y+t+2))}}function create_frame(){for(let A=y_start;A<start_h-y_start;A+=.25*y_padding){let t=w_mult*noise(.005*A,.005*x_start),e=w_mult*noise(.005*A,(width-x_start-7.5)*.005),$=createVector(x_start-3*scale_variable+randomGaussian(0,.5)+t,A+t),B=createVector(x_start+2.5*scale_variable+randomGaussian(0,.5)+t,A+t);p_lines("h",$,B,!0);let a=createVector(start_w-x_start-2.75*scale_variable+randomGaussian(0,.5)+e,A+e),r=createVector(start_w-x_start+2.5*scale_variable+randomGaussian(0,.5)+e,A+e);p_lines("h",a,r,!0);let g=createVector(x_start-2*scale_variable+randomGaussian(0,.5)+t,A+t),l=createVector(x_start+2*scale_variable+randomGaussian(0,.5)+t,A+t);p_lines("h",g,l,!1);let n=createVector(start_w-x_start-2*scale_variable+randomGaussian(0,.5)+e,A+e),s=createVector(start_w-x_start+2.5*scale_variable+randomGaussian(0,.5)+e,A+e);p_lines("h",n,s,!1)}for(let c=x_start-3;c<start_w-x_start-1;c+=.125*x_padding){let Q=w_mult*noise(.005*y_start,.005*c),i=w_mult*noise((height-y_start-5)*.005,.005*c),o=createVector(c+Q,y_start-2.5+randomGaussian(0,.5)+Q),E=createVector(c+Q,y_start+2.5+randomGaussian(0,.5)+Q);p_lines("v",o,E,!0);let I=createVector(c+i,start_h-y_start-2.5+randomGaussian(0,.5)+i),w=createVector(c+i,start_h-y_start+2.5+randomGaussian(0,.5)+i);p_lines("v",I,w,!0);let _=createVector(c+Q,y_start-2+randomGaussian(0,.5)+Q),C=createVector(c+Q,y_start+2.25+randomGaussian(0,.5)+Q);p_lines("v",_,C,!1);let x=createVector(c+i,start_h-y_start-2.25+randomGaussian(0,.5)+i),F=createVector(c+i,start_h-y_start+2+randomGaussian(0,.5)+i);p_lines("v",x,F,!1)}}function p_lines(A,t,e,$,B=[]){let a=1,r=1,g=w_mult*noise(.005*t.y,.005*t.x),l=createVector(t.x-g,t.y-g),n=B;for(let s=0;s<5;s++){if(push(),$?stroke(palette.frame[0]+randomGaussian(0,2),palette.frame[1],palette.frame[2]+randomGaussian(0,5)+20*noise(.025*t.x,.025*t.y),palette.frame[3]):("v"==A&&stroke(palette.base[0]+randomGaussian(0,2),palette.base[1],palette.base[2]+randomGaussian(0,5)+20*noise(.025*t.x,.025*t.y),palette.base[3]),"h"==A&&stroke(palette.base[0]+randomGaussian(0,2),palette.base[1],palette.base[2]+randomGaussian(0,5)-10*noise(.025*t.y,.025*t.x),palette.base[3])),has_pattern&&pattern_functions[chosen_pattern](start_w-2*x_start,pattern_random,l,A)){let c=R.random_choice([0,0,0,0,0,0,1]),Q;Q=p5.Vector.dist(createVector(t.x,t.x),createVector(width/2,height/2));let i=pattern_pal[c];$?stroke(i[0]+randomGaussian(0,2),i[1],i[2]+randomGaussian(0,5)+20*noise(.025*t.x,.025*t.y),i[3]):("v"==A&&stroke(i[0]+randomGaussian(0,2),i[1],i[2]+randomGaussian(0,5)+20*noise(.025*t.x,.025*t.y),i[3]),"h"==A&&stroke(i[0]+randomGaussian(0,2),i[1],i[2]+randomGaussian(0,5)-10*noise(.025*t.y,.025*t.x),i[3]))}has_unfilled&&pattern_functions[chosen_pattern_unfilled](start_w-2*x_start,pattern_random,l,A)&&(a=.5,r=.45);let o=4;grid_c>2&&(o=3);for(let E=0;E<n.length;E++)p5.Vector.dist(createVector(l.x,l.y),n[E])<o&&("v"==A&&stroke(palette.shade[0]+randomGaussian(0,2),palette.shade[1],palette.shade[2]+randomGaussian(0,5)+20*noise(.025*t.x,.025*t.y),palette.shade[3]),"h"==A&&stroke(palette.text[0]+randomGaussian(0,2),palette.text[1],palette.text[2]+randomGaussian(0,5)+20*noise(.025*t.x,.025*t.y),palette.text[3]));"v"==A?translate(a*s,0):translate(0,r*s),$?line_of_yarn_frame(t,e,A):line_of_yarn(t,e,A),pop()}}function pattern_1(A,t,e,$){if(e.x/A*100%(2+.1*t)<.1)return!0}function pattern_2(A,t,e,$){let B=e.dist(createVector(A/2+50*sin(e.y*(1+.1*t)),e.y));if((B*=1/scale_variable)<100+t&&B>10)return!0}function pattern_3(A,t,e,$){let B=randomGaussian(200,50),a=e.dist(createVector(e.y,e.y));if(sin(5*(a*=1/scale_variable))*B*(1/scale_variable)<15*(1/scale_variable)&&sin(5*a)*B*(1/scale_variable)>-15*(1/scale_variable))return!0}function pattern_4(A,t,e,$){let B=25+t,a;if(e.y>e.x&&(a=.5*e.dist(createVector(e.y,e.y))+.5*e.dist(createVector(-e.x,e.x))),e.y<e.x&&(a=.5*e.dist(createVector(e.y,e.y))-.5*e.dist(createVector(-e.x,e.x))),sin(3.14*(a*=1/scale_variable))*B<15&&sin(3.14*a)*B>-15)return!0}function pattern_5(A,t,e,$){let B=randomGaussian(200,50),a=e.dist(createVector(e.y,e.y))+e.dist(createVector(-e.x,e.x));if(sin(5*(a*=1/scale_variable))*B<15&&sin(5*a)*B>-15)return!0}function pattern_6(A,t,e,$){let B=!1,a=[100,200,300,400,500,600],r=[100,200,300,400,500,600,700,800];for(let g=0;g<a.length-1;g++)for(let l=0;l<r.length-1;l++)e.x-a[g]<25&&e.x-a[g]>-25&&e.y-r[l]<25&&e.y-r[l]>-25&&(B=!0);let n=[50,150,250,350,450,550,650],s=[50,150,250,350,450,550,650,750,850];for(let c=0;c<n.length-1;c++)for(let Q=0;Q<s.length-1;Q++)e.x-n[c]<25&&e.x-n[c]>-25&&e.y-s[Q]<25&&e.y-s[Q]>-25&&(B=!0);if(B&&e.y>y_start&&e.y<height-1.3*y_start&&e.x>x_start&&e.x<width-1.3*x_start)return!0}function pattern_7(A,t,e,$){createVector(300,400);let B=createVector(0,0),a=createVector(600,0),r=createVector(0,800),g=createVector(600,800),l=5*Math.abs(t);if(e.dist(B)<l||e.dist(a)<l||e.dist(r)<l||e.dist(g)<l)return!0}function pattern_8(A,t,e,$){let B=!1,a=[0,100,200,300,400,500,600];for(let r=0;r<a.length-1;r++)e.x-a[r]<20&&e.x-a[r]>-20&&(B=!0);if(B&&e.y>y_start&&e.y<height-1.3*y_start)return!0}function createGrid(A,t,e,$){let B=[];for(let a=1;a<=A;a++)for(let r=1;r<=t;r++){let g=$*a/(A+1),l=e*r/(t+1);B.push(createVector(g,l))}return B}function centerSingleVectorArray(A,t){let e=A.map(A=>A),$=getSingleVectorCenter(e),B=createVector(t.x-$.x,t.y-$.y),a=[];for(let r=0;r<e.length;r++)a.push(createVector(e[r].x+B.x,e[r].y+B.y));return a}function getSingleVectorCenter(A){let t=A.map(A=>A),e=t[0].x,$=t[0].y,B=t[0].x,a=t[0].y;for(let r=0;r<t.length;r++)t[r].x<e?e=t[r].x:t[r].x>B?B=t[r].x:t[r].y<$?$=t[r].y:t[r].y>a&&(a=t[r].y);return createVector((e+B)/2,($+a)/2)}function centerVectorArray(A,t){let e=A.map(A=>A),$=getVectorCenter(e),B=createVector(t.x-$.x,t.y-$.y),a=[];for(let r=0;r<e.length;r++)a.push([createVector(e[r][0].x+B.x,e[r][0].y+B.y),createVector(e[r][1].x+B.x,e[r][1].y+B.y)]);return a}function orthogonalProjection(A,t,e){return d1=p5.Vector.sub(t,A),d2=p5.Vector.sub(e,A),l1=d1.mag(),dotp=constrain(d2.dot(d1.normalize()),0,l1),p5.Vector.add(A,d1.mult(dotp))}function multiplySingleVectorArray(A,t){let e=A.map(A=>A),$=[];for(let B=0;B<e.length;B++)(copy_arr_1=e[B].copy()).mult(t),$.push(copy_arr_1);return $}function line_of_yarn(A,t,e){let $=0,B=0,a=1;a=sin(A.x/(width-2*x_start)*180+90),beginShape();for(let r=0;r<=1;r+=.1){let g=p5.Vector.lerp(A,t,r);"h"==e&&($=-1- -(1*sin(180*r)*1)),"v"==e&&(B=-1*sin(180*r)*a),vertex(g.x+randomGaussian(0,.23)+B,g.y+randomGaussian(0,.23)+$)}endShape()}function line_of_yarn_frame(A,t,e){let $=0,B=0,a=1;a=sin(A.x/(width-2*x_start)*180+90),beginShape();for(let r=0;r<=1;r+=.1){let g=p5.Vector.lerp(A,t,r);"h"==e&&($=-1- -(3*sin(180*r)*1)),"v"==e&&(B=-3*sin(180*r)*a),vertex(g.x+randomGaussian(0,.23)+B,g.y+randomGaussian(0,.23)+$)}endShape()}function line_of_yarn_bg(A,t){let e=sin(A.y/(height-2*y_start)*180);beginShape();for(let $=0;$<=1;$+=.01){let B=p5.Vector.lerp(A,t,$),a=B.x+randomGaussian(0,.5),r=B.y+randomGaussian(0,1);r=Math.max(r=Math.min(r,height-y_start+5),y_start+5),vertex(a,r-=10*noise(.05*B.y)*e)}endShape()}function genTokenData(A){let t={},e="0x";for(var $=0;$<64;$++)e+=Math.floor(16*Math.random()).toString(16);return t.hash=e,t.tokenId=(1e6*A+Math.floor(1e3*Math.random())).toString(),t}class Random{constructor(){this.useA=!1;let A=function(A){let t=parseInt(A.substr(0,8),16),e=parseInt(A.substr(8,8),16),$=parseInt(A.substr(16,8),16),B=parseInt(A.substr(24,8),16);return function(){$|=0;let A=((t|=0)+(e|=0)|0)+(B|=0)|0;return B=B+1|0,t=e^e>>>9,e=$+($<<3)|0,$=($=$<<21|$>>>11)+A|0,(A>>>0)/4294967296}};this.prngA=new A(tokenData.hash.substr(2,32)),this.prngB=new A(tokenData.hash.substr(34,32));for(let t=0;t<1e6;t+=2)this.prngA(),this.prngB()}random_dec(){return this.useA=!this.useA,this.useA?this.prngA():this.prngB()}random_num(A,t){return A+(t-A)*this.random_dec()}random_int(A,t){return Math.floor(this.random_num(A,t+1))}random_bool(A){return this.random_dec()<A}random_choice(A){return A[this.random_int(0,A.length-1)]}}let base64Font="data:application/octet-stream;base64,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YwAgAFQAaABpAG4AAE5vdG8gU2FucyBBcmFiaWMgVGhpbgAAUgBlAGcAdQBsAGEAcgAAUmVndWxhcgAAMgAuADAAMAA0ADsARwBPAE8ARwA7AE4AbwB0AG8AUwBhAG4AcwBBAHIAYQBiAGkAYwAtAFQAaABpAG4AADIuMDA0O0dPT0c7Tm90b1NhbnNBcmFiaWMtVGhpbgAATgBvAHQAbwAgAFMAYQBuAHMAIABBAHIAYQBiAGkAYwAgAFQAaABpAG4AAE5vdG8gU2FucyBBcmFiaWMgVGhpbgAAVgBlAHIAcwBpAG8AbgAgADIALgAwADAANAAAVmVyc2lvbiAyLjAwNAAATgBvAHQAbwBTAGEAbgBzAEEAcgBhAGIAaQBjAC0AVABoAGkAbgAATm90b1NhbnNBcmFiaWMtVGhpbgAATgBvAHQAbwAgAGkAcwAgAGEAIAB0AHIAYQBkAGUAbQBhAHIAawAgAG8AZgAgAEcAbwBvAGcAbABlACAATABMAEMAAE5vdG8gaXMgYSB0cmFkZW1hcmsgb2YgR29vZ2xlIExMQwAATQBvAG4AbwB0AHkAcABlACAASQBtAGEAZwBpAG4AZwAgAEkAbgBjAC4AAE1vbm90eXBlIEltYWdpbmcgSW5jLgAATQBvAG4AbwB0AHkAcABlACAARABlAHMAaQBnAG4AIABUAGUAYQBtACwAIABOAGEAZABpAG4AZQAgAEMAaABhAGgAaQBuAGUAIABhAG4AZAAgAE4AaQB6AGEAcgAgAFEAYQBuAGQAYQBoAABNb25vdHlwZSBEZXNpZ24gVGVhbSwgTmFkaW5lIENoYWhpbmUgYW5kIE5pemFyIFFhbmRhaAAARABlAHMAaQBnAG4AZQBkACAAYgB5ACAATQBvAG4AbwB0AHkAcABlACAARABlAHMAaQBnAG4AIABUAGUAYQBtACwAIABOAGEAZABpAG4AZQAgAEMAaABhAGgAaQBuAGUAIABhAG4AZAAgAE4AaQB6AGEAcgAgAFEAYQBuAGQAYQBoAABEZXNpZ25lZCBieSBNb25vdHlwZSBEZXNpZ24gVGVhbSwgTmFkaW5lIENoYWhpbmUgYW5kIE5pemFyIFFhbmRhaAAAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAGcAbwBvAGcAbABlAC4AYwBvAG0ALwBnAGUAdAAvAG4AbwB0AG8ALwAAaHR0cDovL3d3dy5nb29nbGUuY29tL2dldC9ub3RvLwAAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAG0AbwBuAG8AdAB5AHAAZQAuAGMAbwBtAC8AcwB0AHUAZABpAG8AAGh0dHA6Ly93d3cubW9ub3R5cGUuY29tL3N0dWRpbwAAVABoAGkAcwAgAEYAbwBuAHQAIABTAG8AZgB0AHcAYQByAGUAIABpAHMAIABsAGkAYwBlAG4AcwBlAGQAIAB1AG4AZABlAHIAIAB0AGgAZQAgAFMASQBMACAATwBwAGUAbgAgAEYAbwBuAHQAIABMAGkAYwBlAG4AcwBlACwAIABWAGUAcgBzAGkAbwBuACAAMQAuADEALgAgAFQAaABpAHMAIABGAG8AbgB0ACAAUwBvAGYAdAB3AGEAcgBlACAAaQBzACAAZABpAHMAdAByAGkAYgB1AHQAZQBkACAAbwBuACAAYQBuACAAIgBBAFMAIABJAFMAIgAgAEIAQQBTAEkAUwAsACAAVwBJAFQASABPAFUAVAAgAFcAQQBSAFIAQQBOAFQASQBFAFMAIABPAFIAIABDAE8ATgBEAEkAVABJAE8ATgBTACAATwBGACAAQQBOAFkAIABLAEkATgBEACwAIABlAGkAdABoAGUAcgAgAGUAeABwAHIAZQBzAHMAIABvAHIAIABpAG0AcABsAGkAZQBkAC4AIABTAGUAZQAgAHQAaABlACAAUwBJAEwAIABPAHAAZQBuACAARgBvAG4AdAAgAEwAaQBjAGUAbgBzAGUAIABmAG8AcgAgAHQAaABlACAAcwBwAGUAYwBpAGYAaQBjACAAbABhAG4AZwB1AGEAZwBlACwAIABwAGUAcgBtAGkAcwBzAGkAbwBuAHMAIABhAG4AZAAgAGwAaQBtAGkAdABhAHQAaQBvAG4AcwAgAGcAbwB2AGUAcgBuAGkAbgBnACAAeQBvAHUAcgAgAHUAcwBlACAAbwBmACAAdABoAGkAcwAgAEYAbwBuAHQAIABTAG8AZgB0AHcAYQByAGUALgAAVGhpcyBGb250IFNvZnR3YXJlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSBTSUwgT3BlbiBGb250IExpY2Vuc2UsIFZlcnNpb24gMS4xLiBUaGlzIEZvbnQgU29mdHdhcmUgaXMgZGlzdHJpYnV0ZWQgb24gYW4gIkFTIElTIiBCQVNJUywgV0lUSE9VVCBXQVJSQU5USUVTIE9SIENPTkRJVElPTlMgT0YgQU5ZIEtJTkQsIGVpdGhlciBleHByZXNzIG9yIGltcGxpZWQuIFNlZSB0aGUgU0lMIE9wZW4gRm9udCBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UsIHBlcm1pc3Npb25zIGFuZCBsaW1pdGF0aW9ucyBnb3Zlcm5pbmcgeW91ciB1c2Ugb2YgdGhpcyBGb250IFNvZnR3YXJlLgAAaAB0AHQAcAA6AC8ALwBzAGMAcgBpAHAAdABzAC4AcwBpAGwALgBvAHIAZwAvAE8ARgBMAABodHRwOi8vc2NyaXB0cy5zaWwub3JnL09GTAAATgBvAHQAbwAgAFMAYQBuAHMAIABBAHIAYQBiAGkAYwAATm90byBTYW5zIEFyYWJpYwAAVABoAGkAbgAAVGhpbgAAAgAAAAAAAP+cADIAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAAAAAQACAAQBAgEDAQQBBQEGAQcBCAEJAQoBCwEMAQ0BDgEPARABEQESARMBFAEVARYHdW5pMDYxRgd1bmkwNjIzB3VuaUZFOEQHdW5pRkU4RQd1bmlGRTkyB3VuaUZFOTcHdW5pRkVBMgd1bmlGRUEzB3VuaUZFQUEHdW5pRkVDQwd1bmlGRURCB3VuaUZFREQHdW5pRkVFMAd1bmlGRUUxB3VuaUZFRTMHdW5pRkVFNAd1bmlGRUU5B3VuaUZFRjIHdW5pRkVGMwd1bmlGRUY0B3VuaUZFRkMAAAAB//8AAgABAAIADgAAAB4AAAAyAAIAAgAFABcAAQAYABgAAgAOAAEABgABAAQAAQEEAAEAAQAYAAEAAgAAAAwAAAAQAAEAAAABAAAAAAABAAAACgBAAFoAAkRGTFQADmFyYWIAGgAEAAAAAP//AAEAAAAKAAFVUkQgABQAAP//AAIAAAABAAD//wABAAAAAmlzb2wADnJsaWcAFAAAAAEAAQAAAAEAAAACAAYADgAEAAkAAQASAAYACQACACIAQAABABIAAQAIAAEABAAYAAIABwABAAEAEAADAAEAEgABAA4AAAAAAAEAAAABAAQABQAHAAwAGAADAAAAAQAMAAAAAAABAAAAAQAAAAoAMABAAAJERkxUAA5hcmFiABoABAAAAAD//wABAAAABAAAAAD//wABAAAAAWtlcm4ACAAAAAIAAAACAAMACAAUACAACAAJAAMAIAA8AFgAAQAJAAMAcAB+AIwAAgAIAAEAlgADAAEAGAABABIAAAABAAAAAQABAAEABgABAAAAAwABABgAAQASAAAAAQAAAAEAAQABAAkAAQAAAAMAAQAgAAEAEgAAAAEAAAABAAEABQALAA4AEQASABQAAQAAAAEACAAE/+IAAQABAAkAAQAIAAT/5wABAAEABgABAAgABP/YAAEABQALAA4AEQASABQAAgBcAAQAAABMAFQABQAGAAD/0/+1AAD/vwAZAAAAAAAA//EAAAAAAAAAAAAA/90AAAAAAAD/8f/dAAD/0wAZAAD/8QAA/90AAP/nAAEAAAABAAAAAQAAAAEAAAABAAAAAAAAAAEAAAAA39bKXgAAAADb0h1TAAAAANvSTlw=";
-</script>
+let x_padding;
+let y_padding;
+let x_start = 20;
+let y_start = 20;
+let w_mult = 10;
+
+let start_w = 600;
+let start_h = 800;
+
+// object arrays
+let color_palettes;
+let texts;
+
+// chosen 'versions'
+let palette;
+
+// chosen message
+let message;
+let has_message = true;
+
+// random pattern, has pattern, random variable, functions, filled
+let has_pattern = true;
+let pattern_random;
+let pattern_functions = [pattern_1, pattern_2, pattern_3, pattern_4, pattern_5, pattern_6, pattern_7];
+let pattern_filled = true;
+let chosen_pattern;
+
+let has_unfilled = true;
+let chosen_pattern_unfilled;
+
+// grid
+let grid_c;
+let grid_r;
+
+// Preload the base64 font
+let font;
+let bounds;
+function preload() {
+  font = loadFont(base64Font);
+}
+
+let scale_variable;
+
+let tokenData = genTokenData(Math.floor(Math.random() * 900));
+let hash = tokenData.hash
+let projectNumber = Math.floor(parseInt(tokenData.tokenId) / 1000000)
+let mintNumber = parseInt(tokenData.tokenId) % 1000000
+let R;
+
+// Generative colors
+let c_b;
+let c_c;
+let c_d;
+let c_f;
+let c_t;
+let c_s;
+
+let baseHue;
+let baseSat;
+let baseBright;
+let pattern_pal;
+
+function generateColor(baseHue, hueOffset, saturationRange, brightnessRange) {
+
+  const hue = (baseHue + hueOffset) % 360;
+  const saturation = random(saturationRange[0], saturationRange[1]);
+  const brightness = random(brightnessRange[0], brightnessRange[1]);
+
+  return [hue, saturation, brightness, 1.0];
+}
+
+function getPatternPalette(index, baseHue) {
+ // const hueVariations = [315, 325, 305];
+ //const hueVariations = [180, 175, 185];
+
+ const hueVariations = [120, 0, 120];
+
+  const saturationRange = [55, 55];
+  const brightnessRange = [65, 65];
+
+  const hueVariation = hueVariations[index % hueVariations.length];
+  return generateColor(baseHue, hueVariation, saturationRange, brightnessRange);
+
+}
+function generatePalette() {
+  // const baseHue = random(0, 360);
+  const baseHue = random(0, 290);
+
+  // Generate base color
+  const baseColor = generateColor(baseHue, 0, [40, 40], [65, 65]);
+  // const baseColor = generateColor(baseHue, 0, [5,5], [95,95]);
+
+  // Generate creases and frame colors
+  const creasesFrameColor = generateColor(baseHue, 0, [60, 75], [60, 80]);
+
+  // Generate detail color
+  //const detailColor = generateColor(baseHue, 315, [85, 85], [75, 75]);
+  const detailColor = generateColor(baseHue, 315, [35,35], [90,90]);
+
+  // Generate text color
+  const textColor = generateColor(baseHue, 240, [45, 45], [60, 60]);
+
+  const shadeColor = generateColor(baseHue, 45, [15, 15], [95, 95]);
+
+
+  return {
+    base: baseColor,
+    creases: creasesFrameColor,
+    frame: creasesFrameColor,
+    detail: detailColor,
+    text: textColor,
+    shade: shadeColor
+  };
+}
+
+
+function setup() {
+  // put setup code here
+  colorMode(HSB, 360, 100, 100, 1);
+  randomSeed(mintNumber * 100);
+  R = new Random();
+  R.random_dec()      // Random decimal [0-1)
+  R.random_num(0, 10) // Random decimal [0-10)
+  R.random_int(0, 10) // Random integer [0-10]
+  R.random_bool(0.5)  // Random boolean with probability 0.5
+  R.random_choice([1, 2, 3])  // Random choice from a given list. Great for getting a random color from a discrete color palette
+
+  // https://en.wikipedia.org/wiki/Arabic_script_in_Unicode
+  texts = {
+    yalla: {
+      text: String.fromCodePoint(0x0021, 0xFEFC, 0xFEF3),
+      multiplier: 0.25,
+    },
+    akeed: {
+      text: String.fromCodePoint(0x061F, 0xFEAA, 0xFEF4, 0xFEDB, 0x0623),
+      multiplier: 0.35,
+    },
+    tamam: {
+      text: String.fromCodePoint(0xFEE1, 0xFE8E, 0xFEE4, 0xFE97),
+      multiplier: 0.25,
+    },
+    maleeh: {
+      text: String.fromCodePoint(0xFEA2, 0xFEF4, 0xFEE0, 0xFEE3),
+      multiplier: 0.25,
+    },
+    taal: {
+      text: String.fromCodePoint(0x0021, 0xFEDD, 0xFE8E, 0xFECC, 0xFE97),
+      multiplier: 0.25,
+    },
+    habibi: {
+      text: String.fromCodePoint(0xFEF2, 0xFE92, 0xFEF4, 0xFE92, 0xFEA3),
+      multiplier: 0.35,
+    },
+    mama: {
+      text: String.fromCodePoint(0xFE8E, 0xFEE3, 0xFE8E, 0xFEE3),
+      multiplier: 0.25,
+    },
+  }
+
+  color_palettes = {
+    basic: {
+      base: [46, 20, 73.3, 1.0],
+      creases: [46, 20, 33.3, 1.0],
+      frame: [46, 20, 33.3, 1.0],
+      detail: [46, 20, 20, 1.0],
+      text: [190, 86, 65, 1.0],
+    },
+    green: {
+      base: [78, 19, 63, 1.0],
+      creases: [79, 23, 39],
+      frame: [79, 23, 39],
+      detail: [273, 5, 96, 1.0],
+      text: [357, 47, 76, 1.0],
+    },
+    sand: {
+      base: [39, 15, 78, 1.0],
+      creases: [28, 27, 41],
+      frame: [28, 27, 41],
+      detail: [86, 97, 46, 1.0],
+      text: [7, 50, 96, 1.0],
+    },
+    yellow: {
+      base: [38, 45, 91, 1.0],
+      creases: [39, 76, 56],
+      frame: [39, 76, 56],
+      detail: [186, 8, 98, 1.0],
+      text: [201, 92, 70, 1.0],
+    },
+    black: {
+      base: [60, 3, 54, 1.0],
+      creases: [120, 3, 15],
+      frame: [120, 3, 15],
+      detail: [187, 16, 95, 1.0],
+      text: [120, 3, 15, 1.0],
+    },
+    blue: {
+      base: [201, 55, 80, 1.0],
+      creases: [201, 88, 40],
+      frame: [201, 88, 40],
+      detail: [352, 65, 82, 1.0],
+      text: [240, 2, 100, 1.0],
+    },
+    white: {
+      base: [60, 2, 93, 1.0],
+      creases: [30, 21, 70],
+      frame: [30, 21, 70],
+      detail: [352, 65, 82, 1.0],
+      text: [167, 50, 78, 1.0],
+    },
+    random: {
+      base: [60, 2, 93, 1.0],
+      creases: [30, 21, 70],
+      frame: [30, 21, 70],
+      detail: [352, 65, 82, 1.0],
+      text: [167, 50, 78, 1.0],
+      shade: [167, 50, 78, 1.0],
+    }
+  }
+
+  createCanvas(600, 800);
+  // createCanvas(0.75 * windowHeight, windowHeight);
+
+  noLoop();
+  pixelDensity(2);
+  x_padding = 10;
+  y_padding = 5;
+  angleMode(DEGREES);
+
+  pattern_random = randomGaussian(0, 20);
+
+  //palette = R.random_choice([color_palettes.basic, color_palettes.green, color_palettes.sand, color_palettes.yellow, color_palettes.black, color_palettes.blue, color_palettes.white]);
+  palette = color_palettes.random;
+
+  has_message = R.random_bool(0.85);
+  // has_message = true;
+
+  textFont(font)
+  let fSize = 150;
+
+  let text_msg = [];
+
+  if (has_message) {
+    message = R.random_choice([texts.habibi, texts.akeed, texts.yalla, texts.tamam, texts.taal, texts.maleeh, texts.mama]);
+    // message = texts.mama;
+    text_msg = message.text;
+
+    pts = font.textToPoints(text_msg, 0, 0, fSize, {
+      sampleFactor: .1,
+      simplifyThreshold: 0
+    });
+
+    // grid
+    grid_c = R.random_int(1, 3);
+    grid_r = R.random_int(1, 5);
+  }
+
+   has_pattern = R.random_bool(0.85);
+   has_unfilled = R.random_bool(0.25);
+  //has_unfilled = false;
+  //has_pattern = true;
+
+  //has_pattern = true
+  if (has_pattern) chosen_pattern = R.random_int(0, 5);
+  if (has_unfilled) chosen_pattern_unfilled = R.random_int(0, 5);
+
+  //chosen_pattern = 1;
+
+  pattern_filled = R.random_bool(0.5);
+
+  bounds = font.textBounds(text_msg, 0, 0, fSize);
+
+  scale_variable = 1;
+
+
+  // GENERATIVE COLOR
+
+  let gen_pal = generatePalette();
+  c_b = gen_pal.base;
+  // used for the patterns later
+  baseHue = c_b[0];
+  pattern_pal = [getPatternPalette(0, baseHue), getPatternPalette(1, baseHue), getPatternPalette(2, baseHue)]
+
+
+  c_c = [c_b[0], c_b[1] + 20, c_b[2] - 25];
+  c_d = gen_pal.detail;
+  // c_d = [baseHue, 92, 70, 1.0]
+  c_f = [c_b[0], c_b[1] + 20, c_b[2] - 40];
+  // c_t = [7, 10, 80, 1.0];
+  c_t = gen_pal.text; 
+  c_s = gen_pal.shade;
+
+/*   color_palettes.random.base = [60, 2, 93, 1.0];
+  color_palettes.random.creases = [30, 21, 70];
+  color_palettes.random.frame = [30, 21, 70]; */
+  color_palettes.random.base = c_b;
+  color_palettes.random.creases = c_c;
+  color_palettes.random.frame = c_f;
+  color_palettes.random.detail = c_d;
+  color_palettes.random.text = c_t;
+  color_palettes.random.shade = c_s;
+
+
+  // maybe check that the contrast between detail/text and base is enough
+  // maybe include some random "inverse" color schemes, where everything is flipped: base becomes detail
+
+  // separate palette for the pattern details, generative but different for each square/position
+
+}
+
+function draw() {
+  // put drawing code here
+
+  background("#FFF");
+  translate(-7.5, -7.5);
+
+  //scale(windowHeight / 800)
+  noFill();
+
+  // this creates a vector out of the text
+  let msg_vec = [];
+  if (has_message) {
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i]
+      msg_vec.push(createVector(p.x + start_w / 2 - bounds.w / 2, p.y + start_h / 2));
+    }
+
+    let grid_amt_x = grid_c;
+    let grid_amt_y = grid_r;
+    let grid_mult = scale_variable - message.multiplier * (grid_amt_x - 1) * scale_variable;
+
+    let grid_vec = multiplySingleVectorArray(msg_vec, grid_mult);
+    //let grid_vec = line_vectors.map((x) => x);
+    let output_vec = [];
+    let grid = createGrid(grid_amt_x, grid_amt_y, start_h, start_w);
+    print(grid)
+    for (let g = 0; g < grid.length; g++) {
+      let center_pos = grid[g];
+      output_vec = output_vec.concat(centerSingleVectorArray(grid_vec, center_pos))
+    }
+    msg_vec = output_vec;
+  }
+
+  yarn_creases();
+
+  strokeWeight(.5)
+  // rug body
+
+  let even_1 = 0;
+  let even_2 = 0;
+
+  for (let x = x_start; x < start_w - x_start; x += x_padding) {
+    for (let y = y_start; y < start_h - y_start; y += y_padding) {
+      let waviness = w_mult * noise(y * .005, x * .005);
+      let noise_var = 1 * noise(y * .005, x * .005);
+
+      let n =  noise((y + waviness) * 0.05);
+
+      let v1 = createVector(x + waviness + noise_var, y + waviness + 3 * n);
+      let v2 = createVector(x + waviness + noise_var, y + waviness + 5 + 3 *n);
+
+      if (even_1 % 2 == 0) {
+        v1.x += x_padding * .5;
+        v2.x += x_padding * .5;
+      }
+
+      p_lines("v", v1, v2, false, msg_vec);
+      even_1++;
+
+    }
+  }
+
+  for (let x = x_start + x_padding * .5; x < start_w - x_start; x += x_padding) {
+    for (let y = y_start; y < start_h - y_start; y += y_padding) {
+      let waviness = w_mult * noise(y * .005, x * .005);
+      let noise_var = 1 * noise(x * .005, y * .005);
+
+      let n =  noise((y + waviness) * 0.05);
+
+
+      let v1 = createVector(x + waviness, y + waviness + noise_var + 3 * n);
+      let v2 = createVector(x + waviness + 5, y + waviness + noise_var + 3 * n);
+
+      if (even_2 % 2 == 0) {
+        v1.x -= x_padding * .5;
+        v2.x -= x_padding * .5;
+      }
+      p_lines("h", v1, v2, false, msg_vec);
+      even_2++;
+
+    }
+  }
+
+  // rug frame
+  create_frame();
+
+}
+
+function yarn_creases() {
+  // y+=.5
+  for (y = y_start; y < start_h - y_start; y += .5) {
+    // let waviness_start = w_mult * noise(y * .005, x_start * .005);
+    // let waviness_end = w_mult * noise(y * .005, (width - x_start) * .005);
+
+    let waviness_start = w_mult * .5 * noise(y * .005, x_start * .005);
+    let waviness_end = w_mult * .5 * noise(y * .005, (start_w - x_start) * .005);
+    strokeWeight(2);
+
+    stroke(
+      palette.creases[0] + randomGaussian(0, 2),
+      palette.creases[1],
+      palette.creases[2] + randomGaussian(0, 5) + 10 * noise(y * .05),
+    )
+
+    line_of_yarn_bg(
+      createVector(x_start + waviness_start, y + waviness_start + 2),
+      createVector(start_w - x_start + waviness_end + 4, y + waviness_end + 2)
+    );
+
+  }
+}
+
+function create_frame() {
+  // frame left and right
+  for (let y = y_start; y < start_h - y_start; y += y_padding * .25) {
+    let waviness_start = w_mult * noise(y * .005, x_start * .005);
+    let waviness_end = w_mult * noise(y * .005, (width - x_start - 7.5) * .005);
+
+    // base left side
+    let v1 = createVector(x_start - 3 * scale_variable + randomGaussian(0, .5) + waviness_start, y + waviness_start);
+    let v2 = createVector(x_start + 2.5 * scale_variable + randomGaussian(0, .5) + waviness_start, y + waviness_start);
+    p_lines("h", v1, v2, true);
+
+    // base right side
+    let v3 = createVector(start_w - x_start - 2.75 * scale_variable + randomGaussian(0, .5) + waviness_end, y + waviness_end);
+    let v4 = createVector(start_w - x_start + 2.5 * scale_variable + randomGaussian(0, .5) + waviness_end, y + waviness_end);
+    p_lines("h", v3, v4, true);
+
+    // small left side
+    let v5 = createVector(x_start - 2 * scale_variable + randomGaussian(0, .5) + waviness_start, y + waviness_start);
+    let v6 = createVector(x_start + 2 * scale_variable + randomGaussian(0, .5) + waviness_start, y + waviness_start);
+    p_lines("h", v5, v6, false);
+
+    // small right side
+    let v7 = createVector(start_w - x_start - 2 * scale_variable + randomGaussian(0, .5) + waviness_end, y + waviness_end);
+    let v8 = createVector(start_w - x_start + 2.5 * scale_variable + randomGaussian(0, .5) + waviness_end, y + waviness_end);
+    p_lines("h", v7, v8, false);
+  }
+
+  // frame top and bottom
+  for (let x = x_start - 3; x < start_w - x_start - 1; x += x_padding * .125) {
+    let waviness_start = w_mult * noise(y_start * .005, x * .005);
+    let waviness_end = w_mult * noise((height - y_start - 5) * .005, x * .005);
+
+    // base top side
+    let v1 = createVector(x + waviness_start, y_start - 2.5 + randomGaussian(0, .5) + waviness_start);
+    let v2 = createVector(x + waviness_start, y_start + 2.5 + randomGaussian(0, .5) + waviness_start);
+    p_lines("v", v1, v2, true);
+
+    // base bottom side
+    let v3 = createVector(x + waviness_end, start_h - y_start - 2.5 + randomGaussian(0, .5) + waviness_end);
+    let v4 = createVector(x + waviness_end, start_h - y_start + 2.5 + randomGaussian(0, .5) + waviness_end);
+    p_lines("v", v3, v4, true);
+
+    // small top side
+    let v5 = createVector(x + waviness_start, y_start - 2 + randomGaussian(0, .5) + waviness_start);
+    let v6 = createVector(x + waviness_start, y_start + 2.25 + randomGaussian(0, .5) + waviness_start);
+    p_lines("v", v5, v6, false);
+
+    // small bottom side
+    let v7 = createVector(x + waviness_end, start_h - y_start - 2.25 + randomGaussian(0, .5) + waviness_end);
+    let v8 = createVector(x + waviness_end, start_h - y_start + 2 + randomGaussian(0, .5) + waviness_end);
+    p_lines("v", v7, v8, false);
+  }
+}
+
+
+function p_lines(dir, v1, v2, isframe, vector_array = []) {
+  let translate_multiple_v = 1.0;
+  //  let translate_multiple_h = 0.9;
+  let translate_multiple_h = 1.0;
+
+
+  let waviness_v1 = w_mult * noise(v1.y * .005, v1.x * .005);
+  let v1_subwave = createVector(v1.x - waviness_v1, v1.y - waviness_v1);
+
+  let line_vectors = vector_array;
+
+  // if wavypattern
+  //  let pattern_random = randomGaussian(0,10);
+  let line_amt = 5;
+
+  for (let l = 0; l < line_amt; l++) {
+    push()
+
+    if (isframe) {
+      stroke(
+        palette.frame[0] + randomGaussian(0, 2),
+        palette.frame[1],
+        palette.frame[2] + randomGaussian(0, 5) + 20 * noise(v1.x * .025, v1.y * .025),
+        palette.frame[3],
+      )
+    }
+    else {
+
+      if (dir == "v") {
+        stroke(
+          palette.base[0] + randomGaussian(0, 2),
+          palette.base[1],
+          palette.base[2] + randomGaussian(0, 5) + 20 * noise(v1.x * .025, v1.y * .025),
+          palette.base[3],
+        )
+      }
+      if (dir == "h") {
+        stroke(
+          palette.base[0] + randomGaussian(0, 2),
+          palette.base[1],
+          palette.base[2] + randomGaussian(0, 5) - 10 * noise(v1.y * .025, v1.x * .025),
+          palette.base[3],
+        )
+
+      }
+    }
+
+    // if pattern of choice gives true, set color to detail color
+    if (has_pattern) {
+      if (pattern_functions[chosen_pattern](start_w - 2 * x_start, pattern_random, v1_subwave, dir)) {
+
+        // let gen_det = [(c_b[0] + R.random_int(0,360))%360, 10 + R.random_int(0,10), 95- R.random_int(0,40)];
+        // let gen_det = [(c_d[0] + R.random_int(-10,10))%360, c_d[1] - R.random_int(0,10), c_d[2] - R.random_int(0,10)];
+         //let gen_det = palette.detail;
+
+        //let p_index = R.random_int(0,2);
+        let p_index = R.random_choice([0,0,0,0,0,0,1]);
+        let dist_center;
+        dist_center = p5.Vector.dist(createVector(v1.x, v1.x), createVector(width / 2, height / 2));
+
+        // p_index = Math.floor(10 * (dist_center / (width / 2))) % 3;
+
+        // if (v1.y/height > .5) p_index = 1;
+        
+        let gen_det = pattern_pal[p_index];
+
+        if (!isframe) {
+          if (dir == "v") {
+            stroke(
+              gen_det[0] + randomGaussian(0, 2),
+              gen_det[1],
+              gen_det[2] + randomGaussian(0, 5) + 20 * noise(v1.x * .025, v1.y * .025),
+              gen_det[3],
+            )
+          }
+          if (dir == "h") {
+            stroke(
+              gen_det[0] + randomGaussian(0, 2),
+              gen_det[1],
+              gen_det[2] + randomGaussian(0, 5) - 10 * noise(v1.y * .025, v1.x * .025),
+              gen_det[3],
+            )
+          }
+        }
+        else {
+          stroke(
+            gen_det[0] + randomGaussian(0, 2),
+            gen_det[1],
+            gen_det[2] + randomGaussian(0, 5) + 20 * noise(v1.x * .025, v1.y * .025),
+            gen_det[3],
+          )
+        }
+
+      }
+    }
+
+    // UNFILLED PATTERN
+    if (has_unfilled) {
+      if (pattern_functions[chosen_pattern_unfilled](start_w - 2 * x_start, pattern_random, v1_subwave, dir)) {
+        translate_multiple_v = 0.5;
+        translate_multiple_h = 0.45;
+      }
+    }
+
+
+    // map through the lines and fill if the point is close to the line
+    // if it's a text rug 
+
+    let dist = 4;
+    if (grid_c > 2) dist = 3;
+
+    for (let i = 0; i < line_vectors.length; i++) {
+      // let op = orthogonalProjection(line_vectors[i][0], line_vectors[i][1], createVector(v1_subwave.x, v1_subwave.y));
+      let d = p5.Vector.dist(createVector(v1_subwave.x, v1_subwave.y), line_vectors[i]);
+      if (d < dist) {
+        // translate_multiple_v = 1.25;
+        // translate_multiple_h = 0.8;
+
+        if (dir == "v") {
+          stroke(
+            palette.shade[0] + randomGaussian(0, 2),
+            palette.shade[1],
+            palette.shade[2] + randomGaussian(0, 5) + 20 * noise(v1.x * .025, v1.y * .025),
+            palette.shade[3],
+          )
+        }
+        if (dir == "h") {
+          stroke(
+            palette.text[0] + randomGaussian(0, 2),
+            palette.text[1],
+            palette.text[2] + randomGaussian(0, 5) + 20 * noise(v1.x * .025, v1.y * .025),
+            palette.text[3],
+          )
+        }
+      }
+    }
+
+
+    // multiplication by 1.5 gives different pattern, all else equal. Same with e.g. 1.8 for the second translate only
+    dir == "v" ? translate(translate_multiple_v * l, 0) : translate(0, translate_multiple_h * l);
+    if (isframe) {
+      line_of_yarn_frame(v1, v2, dir);
+    } else {
+      line_of_yarn(v1, v2, dir);
+    }
+    pop()
+  }
+}
+
+// functions for patterns, instead of looping through vector arrays, this will be quicker
+
+// pattern 1, random vertical lines
+function pattern_1(w, r, v, dir) {
+  if ((v.x / w) * 100 % (2 + .1 * r) < 0.1) return true
+}
+
+// pattern 2, wave in the middle
+function pattern_2(w, r, v, dir) {
+  let d = v.dist(createVector(w / 2 + 50 * sin(v.y * (1 + .1 * r)), v.y))
+  d *= 1 / scale_variable
+
+  if (d < (100 + r) && d > 10) return true;
+}
+
+// pattern 3, diagonal stripes
+function pattern_3(w, r, v, dir) {
+  let random_thickness = randomGaussian(200, 50);
+  let d = v.dist(createVector(v.y, v.y))
+  d *= 1 / scale_variable
+
+  if (sin(d * 5) * random_thickness * (1 / scale_variable) < 15 * (1 / scale_variable)
+    && sin(d * 5) * random_thickness * (1 / scale_variable) > -15 * (1 / scale_variable)) return true;
+}
+
+// pattern 4, diagonal circles
+function pattern_4(w, r, v, dir) {
+  let random_thickness = 25 + r;
+  let d;
+
+  if (v.y > v.x) d = .5 * v.dist(createVector(v.y, v.y)) + .5 * v.dist(createVector(-v.x, v.x))
+  if (v.y < v.x) d = .5 * v.dist(createVector(v.y, v.y)) - .5 * v.dist(createVector(-v.x, v.x))
+  d *= 1 / scale_variable
+
+  if (sin(d * 3.14) * random_thickness < 15 && sin(d * 3.14) * random_thickness > -15) return true;
+}
+
+// pattern 5, pseudo-flowfield
+function pattern_5(w, r, v, dir) {
+  let random_thickness = randomGaussian(200, 50);
+  let d = v.dist(createVector(v.y, v.y)) + v.dist(createVector(-v.x, v.x))
+  d *= 1 / scale_variable
+
+  if (sin(d * 5) * random_thickness < 15 && sin(d * 5) * random_thickness > -15) return true;
+}
+
+// pattern 6, checkerboard
+function pattern_6(w, r, v, dir) {
+  //   if (dir == "v" && v.y > y_start && v.y < height - y_start * 1.3) return true;
+
+  // https://stackoverflow.com/questions/9776555/how-to-divide-number-into-integer-pieces-that-are-each-a-multiple-of-n
+
+  // divide up the width in squares
+  // if the v.x is in one of the squares, like in the even ones, return true
+  // use a floor function to get the segment
+
+  let checker_size = 50;
+
+
+  let is_checkered = false;
+  let grid_x = [100, 200, 300, 400, 500, 600];
+  let grid_y = [100, 200, 300, 400, 500, 600, 700, 800];
+
+  for (let n = 0; n < grid_x.length - 1; n++) {
+    for (let n2 = 0; n2 < grid_y.length - 1; n2++) {
+      if (v.x - grid_x[n] < checker_size / 2 && v.x - grid_x[n] > -checker_size / 2
+        && v.y - grid_y[n2] < checker_size / 2 && v.y - grid_y[n2] > -checker_size / 2
+      ) is_checkered = true
+    }
+  }
+
+  let grid_x2 = [50, 150, 250, 350, 450, 550, 650];
+  let grid_y2 = [50, 150, 250, 350, 450, 550, 650, 750, 850];
+
+  for (let n = 0; n < grid_x2.length - 1; n++) {
+    for (let n2 = 0; n2 < grid_y2.length - 1; n2++) {
+      if (v.x - grid_x2[n] < checker_size / 2 && v.x - grid_x2[n] > -checker_size / 2
+        && v.y - grid_y2[n2] < checker_size / 2 && v.y - grid_y2[n2] > -checker_size / 2
+      ) is_checkered = true
+    }
+  }
+
+  if (is_checkered
+
+    && v.y > y_start && v.y < height - y_start * 1.3
+    && v.x > x_start && v.x < width - x_start * 1.3) return true;
+}
+
+// pattern 7, circle corners
+function pattern_7(w, r, v, dir) {
+
+  let m = createVector(300, 400);
+  let t_l = createVector(0, 0);
+  let t_r = createVector(600, 0);
+  let b_l = createVector(0, 800);
+  let b_r = createVector(600, 800);
+  let dist_var = Math.abs(r) * 5;
+  if (
+    v.dist(t_l) < dist_var ||
+    v.dist(t_r) < dist_var ||
+    v.dist(b_l) < dist_var ||
+    v.dist(b_r) < dist_var
+  ) return true
+
+}
+
+// pattern 8, wide vertical stripes
+function pattern_8(w, r, v, dir) {
+
+  let is_checkered = false;
+  let grid = [0, 100, 200, 300, 400, 500, 600];
+  for (let n = 0; n < grid.length - 1; n++) {
+    if (v.x - grid[n] < 20 && v.x - grid[n] > -20) is_checkered = true
+  }
+
+  if (is_checkered
+
+    && v.y > y_start && v.y < height - y_start * 1.3) return true;
+
+}
+
+
+
+/*
+CREATE A GRID 
+*/
+
+function createGrid(columns, rows, frameheight, framewidth) {
+
+  let gridCenters = [];
+
+  for (let c = 1; c <= columns; c++) {
+    for (let r = 1; r <= rows; r++) {
+      let column_center = framewidth * c / (columns + 1);
+      let row_center = frameheight * r / (rows + 1);
+      gridCenters.push(createVector(column_center, row_center));
+    }
+  }
+
+  return gridCenters;
+}
+
+/*
+CENTER VECTOR IN GRID POSITION
+*/
+
+function centerSingleVectorArray(vector_array, center_point) {
+  let vec_arr = vector_array.map(x => x);
+  let center_of_array = getSingleVectorCenter(vec_arr);
+  let diff_vec = createVector(center_point.x - center_of_array.x, center_point.y - center_of_array.y);
+
+  let return_array = [];
+
+  for (let i = 0; i < vec_arr.length; i++) {
+    return_array.push(createVector(vec_arr[i].x + diff_vec.x, vec_arr[i].y + diff_vec.y));
+  }
+
+  return return_array;
+
+}
+
+function getSingleVectorCenter(vector) {
+  // array of vectors [v1, v2, v3]
+  let vector_array = vector.map(x => x);
+  let min_x = vector_array[0].x;
+  let min_y = vector_array[0].y;
+  let max_x = vector_array[0].x;
+  let max_y = vector_array[0].y;
+
+  for (let i = 0; i < vector_array.length; i++) {
+    if (vector_array[i].x < min_x) {
+      min_x = vector_array[i].x;
+    }
+    else if (vector_array[i].x > max_x) {
+      max_x = vector_array[i].x;
+    }
+    else if (vector_array[i].y < min_y) {
+      min_y = vector_array[i].y;
+    }
+    else if (vector_array[i].y > max_y) {
+      max_y = vector_array[i].y;
+    }
+
+  }
+
+  let vector_center = createVector((min_x + max_x) / 2, (min_y + max_y) / 2);
+
+  return vector_center;
+}
+
+function centerVectorArray(vector_array, center_point) {
+  // CENTERS AN ARRAY OF VECTORS, THAT MAKE UP A SHAPE, IN A GIVEN CENTER POINT
+
+  let vec_arr = vector_array.map((x) => x);
+  let center_of_array = getVectorCenter(vec_arr);
+  let diff_vec = createVector(center_point.x - center_of_array.x, center_point.y - center_of_array.y);
+  let return_array = [];
+
+  for (let i = 0; i < vec_arr.length; i++) {
+    return_array.push([createVector(vec_arr[i][0].x + diff_vec.x, vec_arr[i][0].y + diff_vec.y),
+    createVector(vec_arr[i][1].x + diff_vec.x, vec_arr[i][1].y + diff_vec.y)]);
+  }
+
+  return return_array;
+}
+
+
+/*
+FIND THE NEAREST POINT IN A LINE
+*/
+
+function orthogonalProjection(a, b, p) {
+
+  // find nearest point alont a SEGMENT 
+
+  d1 = p5.Vector.sub(b, a);
+  d2 = p5.Vector.sub(p, a);
+  l1 = d1.mag();
+
+  dotp = constrain(d2.dot(d1.normalize()), 0, l1);
+
+  return p5.Vector.add(a, d1.mult(dotp))
+
+}
+
+/*
+MULTIPLY AN ARRAY OF VECTORS
+*/
+
+function multiplySingleVectorArray(array, multiple) {
+  let arr = array.map(x => x);
+  let return_array = [];
+  for (let i = 0; i < arr.length; i++) {
+    copy_arr_1 = arr[i].copy();
+    copy_arr_1.mult(multiple);
+    return_array.push(copy_arr_1)
+  }
+  return return_array;
+}
+
+
+function line_of_yarn(v1, v2, dir) {
+
+  let times = 1.25;
+
+  // let step = 0.1;
+  let step = 0.1;
+  let offset_y = 0;
+  let offset_x = 0;
+
+  let left_side = 1;
+  // if (v1.x > width/2) left_side = -1
+  left_side = sin((v1.x / (width - 2 * x_start)) * 180 + 90);
+
+  let top_side = -1;
+  //if (v1.y > height/2) top_side = -1
+  //top_side = sin((v1.y/(height-2*y_start))*180 + 90);
+
+  beginShape();
+  for (let s = 0; s <= 1; s += step) {
+    let v_lerp = p5.Vector.lerp(v1, v2, s);
+    if (dir == "h") offset_y = -1 - 1 * sin(180 * s) * top_side;
+    if (dir == "v") offset_x = -1 * sin(180 * s) * left_side;
+    vertex(
+      v_lerp.x + randomGaussian(0, 0.23) + offset_x,
+      v_lerp.y + randomGaussian(0, 0.23) + offset_y
+    )
+  }
+  endShape();
+
+}
+
+function line_of_yarn_frame(v1, v2, dir) {
+
+  // let step = 0.1;
+  let step = 0.1;
+  let offset_y = 0;
+  let offset_x = 0;
+
+  let left_side = 1;
+  // if (v1.x > width/2) left_side = -1
+  left_side = sin((v1.x / (width - 2 * x_start)) * 180 + 90);
+
+  let top_side = -1;
+  //if (v1.y > height/2) top_side = -1
+  //top_side = sin((v1.y/(height-2*y_start))*180 + 90);
+
+  beginShape();
+  for (let s = 0; s <= 1; s += step) {
+    let v_lerp = p5.Vector.lerp(v1, v2, s);
+    if (dir == "h") offset_y = -1 - 3 * sin(180 * s) * top_side;
+    if (dir == "v") offset_x = -3 * sin(180 * s) * left_side;
+    vertex(
+      v_lerp.x + randomGaussian(0, 0.23) + offset_x,
+      v_lerp.y + randomGaussian(0, 0.23) + offset_y
+    )
+  }
+  endShape();
+
+}
+
+function line_of_yarn_bg(v1, v2) {
+
+  let step = 0.01;
+  let offset_y = 0;
+
+  let top_side = sin((v1.y / (height - 2 * y_start)) * 180);
+
+  beginShape();
+  for (let s = 0; s <= 1; s += step) {
+    let v_lerp = p5.Vector.lerp(v1, v2, s);
+    /* 
+        let waviness = w_mult * noise(v_lerp.y * .005, v_lerp.x * .005); */
+
+    let xpos = v_lerp.x + randomGaussian(0, .5);
+    let ypos = v_lerp.y + randomGaussian(0, 1);
+    /*     if (ypos < y_start ) ypos = y_start
+        if (ypos > height-y_start ) ypos = height-ypos */
+
+    ypos = Math.min(ypos, height - y_start + 5);
+    ypos = Math.max(ypos, y_start + 5);
+
+    ypos -= 10 * noise((v_lerp.y) * 0.05) * top_side
+
+    vertex(
+      xpos, ypos
+    )
+  }
+  endShape();
+
+}
+
+function genTokenData(projectNum) {
+  let data = {};
+  let hash = "0x";
+  for (var i = 0; i < 64; i++) {
+    hash += Math.floor(Math.random() * 16).toString(16);
+  }
+  data.hash = hash;
+  data.tokenId = (projectNum * 1000000 + Math.floor(Math.random() * 1000)).toString();
+  return data;
+}
+
+// ART BLOCKS RANDOM
+
+class Random {
+  constructor() {
+    this.useA = false;
+    let sfc32 = function (uint128Hex) {
+      let a = parseInt(uint128Hex.substr(0, 8), 16);
+      let b = parseInt(uint128Hex.substr(8, 8), 16);
+      let c = parseInt(uint128Hex.substr(16, 8), 16);
+      let d = parseInt(uint128Hex.substr(24, 8), 16);
+      return function () {
+        a |= 0; b |= 0; c |= 0; d |= 0;
+        let t = (((a + b) | 0) + d) | 0;
+        d = (d + 1) | 0;
+        a = b ^ (b >>> 9);
+        b = (c + (c << 3)) | 0;
+        c = (c << 21) | (c >>> 11);
+        c = (c + t) | 0;
+        return (t >>> 0) / 4294967296;
+      };
+    };
+    // seed prngA with first half of tokenData.hash
+    this.prngA = new sfc32(tokenData.hash.substr(2, 32));
+    // seed prngB with second half of tokenData.hash
+    this.prngB = new sfc32(tokenData.hash.substr(34, 32));
+    for (let i = 0; i < 1e6; i += 2) {
+      this.prngA();
+      this.prngB();
+    }
+  }
+  // random number between 0 (inclusive) and 1 (exclusive)
+  random_dec() {
+    this.useA = !this.useA;
+    return this.useA ? this.prngA() : this.prngB();
+  }
+  // random number between a (inclusive) and b (exclusive)
+  random_num(a, b) {
+    return a + (b - a) * this.random_dec();
+  }
+  // random integer between a (inclusive) and b (inclusive)
+  // requires a < b for proper probability distribution
+  random_int(a, b) {
+    return Math.floor(this.random_num(a, b + 1));
+  }
+  // random boolean with p as percent liklihood of true
+  random_bool(p) {
+    return this.random_dec() < p;
+  }
+  // random value in an array of items
+  random_choice(list) {
+    return list[this.random_int(0, list.length - 1)];
+  }
+}
+
+
+let base64Font = 'data:application/octet-stream;base64,AAEAAAAQAQAABAAARkZUTZd7Ng4AAB10AAAAHEdERUYAzAFCAAAbHAAAAEZHUE9TGokbkQAAHBwAAAFWR1NVQt4gxfkAABtkAAAAuE9TLzKh1FJCAAABiAAAAGBjbWFw/3ADvgAAAkwAAAHGY3Z0IAAhAnkAAAQUAAAABGdhc3D//wADAAAbFAAAAAhnbHlmcMi9WwAABEwAAArsaGVhZBnGr7EAAAEMAAAANmhoZWEIYwAeAAABRAAAACRobXR4JyUCkAAAAegAAABkbG9jYRx+HzQAAAQYAAAANG1heHAAHQB7AAABaAAAACBuYW1lwVdfyQAADzgAAArgcG9zdD5mYwwAABoYAAAA/AABAAAAAgEGrP8ZD18PPPUACwPoAAAAANvSHVMAAAAA29JOXAAA/nUDAgOiAAAACAACAAAAAAAAAAEAAAVe/R4AAAL0AAD/8gMCAAEAAAAAAAAAAAAAAAAAAAAZAAEAAAAZAEwAAwAAAAAAAQAAAAAAAAAAAAAALgAAAAAABAGnAPoABQAAAooCWAAAAEsCigJYAAABXgAyAMMAAAAAAAAAAAAAAACAACBDgAAgAAAAAAgAAAAAR09PRwFAACH+/AVe/R4AAAVeAuIAAABAAAAAAAFFAWQAAAAgAAQBbAAhAAAAAAFNAAAA3wBVAZ4AIADbAAcA3QBcAQgAXAFgAAABDQAAAooAMAIzAAAB/AAgAd0AAAF3AAACkgAyARIAAAHVACgB8AAAAk0AAAGVADIC9AAyAQ0AAAFgAAACCQAtAAAAAwAAAAMAAAAcAAEAAAAAAMAAAwABAAAAHAAEAKQAAAAYABAAAwAIACEGI/6S/pf+o/6q/sz+5P7p/vT+/P//AAAAIQYf/o3+l/6i/qr+zP7b/un+8v78////4gAAAAABcgAAAWIBQQAAASsAAAEcAAEAAAAWAB4AAAAmAAAAAAAkAAAANAAAAAAABAAAAAAAAAAFAAYABwAAAAAAAAAIAAoACwAOAAAADwAAAAAAEAARAAAAEgATABUAFgAXAAABBgAAAQAAAAAAAAABAgAAAAIAAAAAAAAAAAAAAAAAAAABAAAAAwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACECeQAAACoAKgAqAEgAiADIANYA9gE0AXQB1AIGAkQClALQAwIDLgNwA64EAAQ2BKAE3gUuBXYAAgAhAAABKgKaAAMABwAusQEALzyyBwQA7TKxBgXcPLIDAgDtMgCxAwAvPLIFBADtMrIHBgH8PLIBAgDtMjMRIREnMxEjIQEJ6MfHApr9ZiECWAAAAgBV//gAiQLKAAMADwAANyMDMwM0NjMyFhUUBiMiJnwYAhwpCg8SCQkSDwquAhz9TQwTEwwNEhIAAAAAAgAg//gBcALUAB8AKwAANzU0LgEnLgI1NDYzMhYXBy4BIyIGFRQeARceAh0BByImNTQ2MzIWFRQG7Q8gGig7IWZUKUIrCiRDJUZZHTUkIyQODhIJCRIPCgquDC47KRIcN0cyVlQPEhoSEEZLLj4xGhgwPzIMthINDBMTDA0SAAACAAcAAADCA6IAAwAmAAAzAzMTAyc+ATcXLgE1ND4BMzIWFwcuASMiBhUUHgEXBz4BNxcOAm4SGBJ6BRolFB8xPBorFw0ZCgUKFgskIhwtGygbLxMHGEFBAoT9fALPFgYKBQcFOCIaJBIEBBQDAyMXFSIVBQUHDwcUCRQSAAAAAAEAXAAAAIgCygADAAAzAzMTcBQYFALK/TYAAAABAFz/+wEWAsoAEAAABSIuAScDMxMeAjMyFhUUBgEIPEAZAxQXFAMSNzgGBQgFGUVBAjD92z8/FAYFBAkAAAAAAgAA/1UBbgEIAB4AKgAAFTcyPgI3Fw4CFRQeATMyFhUUBiMiLgE3Mw4DFyImNTQ2MzIWFRQGBCg7KyQSGQcLBRRBRAYFCAZATyAGAw4hKjqICxAQCwsPDwUYCy1kWQUkLyUWHCwaBgUECR02JykxGAimEAoLEBALChAAAAMAAP/7AMwCPAASAB4AKgAAFTcyPgE1NC4BJzceAhUUDgITIiY1NDYzMhYVFAYjIiY1NDYzMhYVFAYEQUIXCxYRFxAXDA8oR3oLEBALCw8PdAsQEAsLDw8FGBozJx1CTi4JK1JHGyQ2JBMCDBAKCxAQCwoQEAoLEBALChAAAAAAAgAw/nYCmAFkABAAQwAABSIuAic3HgMzMhYVFAYBIi4CNTQ+AzcXLgMjIgYHJz4BMzIeAxczFSIOBBUUHgIzMjY3Fw4BAoo/XD4iAxUDHTlXPAYFCP7iQnVYMzlfdXk2AidGRU0vKzcUBBVCJiZHQ0JBIQktaGlhTCwxVG08O1YgCCRiBRAwXU4HSVgrDgYFBAn+eyFDZEJIdVxBKAcIBRccEw8HFwgPEBcZEQEbFyxBU2Y7Pls7HRYLFQ8VAAAAAQAA//sB9wEwACAAABU3Mj4CNy4CIyIOAQcnPgEzMh4DOwEXIg4EBDxkYGY9MVhXMRAfIBMEGTQZNVNBNS8YGQMfOT1IWnUFGBAiNCQmNx4CBgYYCAYbJygbFxciJyMWAAAAAAEAIP/7AgoBtQAoAAA3Mj4BNTQuAic3HgIXHgIzMhYVFAYjIi4BJxcUDgEjIi4BJzceAbY0PRsMHjcqFDI6HAUHJEQ4BgUIBjxJJgcPG0ZBGjkyEgseTxMcMiEUNkdbOQ5Da1IeKTwfBgUECSI/LAYgPikIEAsWEw4AAAABAAD/+wHrAYAAOAAAFTcyPgM1NC4BIyIOAQceAhceAzMyFhUUBiMiLgEnLgInLgI1ND4CMzIeARUUDgMEN2pcRicUMi0vSi0GHj05Fx48OjcbBgUIBitRTSYZPT4bAgMBIThGJSo+IilJY3QFGCM6RUgeECQZGh8KHUJDIB0gDwQGBQQJDCUlIUhCGAIFBgIMIB0UGCscI1BNQCYAAAAAAQAA//sBdwLEACkAABU3MzI+AjU0JicuAzU0PgE3PgM3Fw4DBzUeAxUUDgIjBEYzSzIZQDIoNiAOAwcFGkRUYTYKOGdYRRYqW08xIDtTMwUYDh4xIi5rNCoyHA0ECQwJAxQsMDIZFhk0NC8UCShWWlsuKjojEAAAAQAy/xoCPgLKAB8AABc0PgE3Fw4CFRQeATMyPgInAzMTFg4DIyIuAjIIFxUXEBYLOmM9TWU6FQMRGBECCB8/Z0w0WUIkFhk3RC0LHz87GjxTLDdrnWYB8/4NQ4JxVjEbNE4AAAEAAP/7ASACygAaAAAVNzI+AScDMxMeAjMyFhUUBiMiLgEnMw4CBD82CwIRGRADFTQvBgUIBis4HQYKBh89BRgsVDoB/f4FSFIiBgUECR80HSIyHAAAAAABACj+dwGoAWoAKwAAEy4CNTQ+AhYXNi4CIyIOAQcnPgIzMh4CFRQOAQcuAQ4CFRQeARdeERkMME5eXicJBiE9LSQ3Jw4WFTc+HyY8KxcDBwYpXVtKLQ4ZD/53R3piIUBPKQkODitWRioiOCIMMjwbHjVFKBMjIRAOEQUiRjojaHg7AAABAAD/+wGcAU0AKQAAFTcyPgE3PgIzMh4CFRQOASMiJic3HgEzMj4BNTQuASMiDgEHDgMEISskFRYnKhcdNioYHjckKF88DThYJiErFSU6HxMkIhAZJiElBRgyUjAxOhsgOEcnKT0hIzURLiQeMRsuUjQcNyc+TCgOAAAAAgAA//gCWwFWACcAOAAAFTcyPgE3PgMzMh4BFx4CMzIWFRQGIyImJzMUDgEjIi4BJw4CNx4DMzI2Jy4DIyIOAQQgKyIUDyQrMRwiKyITGjI1HQMIBAouSxQHGSkaIkxJHhInNXwJJjVAIionGBUeGRkPFi8vBRgiPSceQTokNVUwPTsRAwgECSkpHCYTH0ExKEElpxQyLx43PTVHKxMkRQAAAAACADIAAAFjAbkAEgAiAAAzIi4BNTQ2NxcnNx4CFRQOAicyPgE1NC4BJxcOAhUUFr8tPyFSQwE0EDdWMhEnPy4xPh4iOSMMKEEnOyA9K0lxQAYpFCpeYzIaNy4dGCY8IiVOSh4EJUhNLjY9AAADADL+dQMCAKsAMwA/AEsAABc0PgE3Fw4CFRQeAjMyPgI1NC4CJzceAzMyFhUUBiMiLgEnHgEVFA4CIyIuAQEiJjU0NjMyFhUUBiMiJjU0NjMyFhUUBjIIFxUXEBYLIENpSEpvTCYgMTYXCThKNS4cCAMHDgkjJAsLBiZPeVNXik8BagsQEAsLDw90CxAQCwsPDxYZN0QtCx8/OxoqRTIaIjU+GxUiHBYKFxkiFQkHBAQJBAkFDRsIHEQ8Jytc/tQQCgsQEAsKEBAKCxAQCwoQAAAAAAMAAP9WAMMBawASAB4AKgAAFTcyPgE1NC4BJzceAhUUDgIXIiY1NDYzMhYVFAYjIiY1NDYzMhYVFAYEQUIXCxYRFxAXDA8oR3ELEBALCw8PdAsQEAsLDw8FGBozJx1CTi4JK1JHGyQ2JBOlEAoLEBALChAQCgsQEAsKEAADAAD/SgFuAQgAIAAsADgAABU3Mj4CNxcOAhUUHgIzMhYVFAYjIi4CNzMOAxciJjU0NjMyFhUUBiMiJjU0NjMyFhUUBgQiOzEnDxkHCwUKHz0zBgUIBjJFKA4EAw4lLjjSCxAQCwsPD3QLEBALCw8PBRgNL2NWBSQvJRYVJBoPBgUECRAfLh0pMRgIsRAKCxAQCwoQEAoLEBALChAAAAAAAwAt//UCFwLKABEAIQAtAAAFIi4CJwMzEx4CMzIWFRQGBSImJzcWPgI1FxQOAzcuAyc3HgMXAgkiLh0PAhIXEgMLKzEGBQj+exs3CwRHfF01EyU9SUfSKUZDTTAQM1JFQCAFEyxLOQIM/g1BWCsGBQQJBgkCGRISTIVhGE9vSCgQpD9mWVYtETBcXWA0AAAAAAAiAZ4AAQAAAAAAAAA0AGoAAQAAAAAAAQAVAMsAAQAAAAAAAgAHAPEAAQAAAAAAAwAeATcAAQAAAAAABAAVAYIAAQAAAAAABQANAbQAAQAAAAAABgATAeoAAQAAAAAABwAhAkIAAQAAAAAACAAVApAAAQAAAAAACQA1AxIAAQAAAAAACgBBA8wAAQAAAAAACwAfBE4AAQAAAAAADAAeBKwAAQAAAAAADQFLB2MAAQAAAAAADgAaCOUAAQAAAAAAEAAQCSIAAQAAAAAAEQAECT0AAwABBAkAAABoAAAAAwABBAkAAQAqAJ8AAwABBAkAAgAOAOEAAwABBAkAAwA8APkAAwABBAkABAAqAVYAAwABBAkABQAaAZgAAwABBAkABgAmAcIAAwABBAkABwBCAf4AAwABBAkACAAqAmQAAwABBAkACQBqAqYAAwABBAkACgCCA0gAAwABBAkACwA+BA4AAwABBAkADAA8BG4AAwABBAkADQKWBMsAAwABBAkADgA0CK8AAwABBAkAEAAgCQAAAwABBAkAEQAICTMAQwBvAHAAeQByAGkAZwBoAHQAIAAyADAAMQA1AC0AMgAwADIAMAAgAEcAbwBvAGcAbABlACAATABMAEMALgAgAEEAbABsACAAUgBpAGcAaAB0AHMAIABSAGUAcwBlAHIAdgBlAGQALgAAQ29weXJpZ2h0IDIwMTUtMjAyMCBHb29nbGUgTExDLiBBbGwgUmlnaHRzIFJlc2VydmVkLgAATgBvAHQAbwAgAFMAYQBuAHMAIABBAHIAYQBiAGkAYwAgAFQAaABpAG4AAE5vdG8gU2FucyBBcmFiaWMgVGhpbgAAUgBlAGcAdQBsAGEAcgAAUmVndWxhcgAAMgAuADAAMAA0ADsARwBPAE8ARwA7AE4AbwB0AG8AUwBhAG4AcwBBAHIAYQBiAGkAYwAtAFQAaABpAG4AADIuMDA0O0dPT0c7Tm90b1NhbnNBcmFiaWMtVGhpbgAATgBvAHQAbwAgAFMAYQBuAHMAIABBAHIAYQBiAGkAYwAgAFQAaABpAG4AAE5vdG8gU2FucyBBcmFiaWMgVGhpbgAAVgBlAHIAcwBpAG8AbgAgADIALgAwADAANAAAVmVyc2lvbiAyLjAwNAAATgBvAHQAbwBTAGEAbgBzAEEAcgBhAGIAaQBjAC0AVABoAGkAbgAATm90b1NhbnNBcmFiaWMtVGhpbgAATgBvAHQAbwAgAGkAcwAgAGEAIAB0AHIAYQBkAGUAbQBhAHIAawAgAG8AZgAgAEcAbwBvAGcAbABlACAATABMAEMAAE5vdG8gaXMgYSB0cmFkZW1hcmsgb2YgR29vZ2xlIExMQwAATQBvAG4AbwB0AHkAcABlACAASQBtAGEAZwBpAG4AZwAgAEkAbgBjAC4AAE1vbm90eXBlIEltYWdpbmcgSW5jLgAATQBvAG4AbwB0AHkAcABlACAARABlAHMAaQBnAG4AIABUAGUAYQBtACwAIABOAGEAZABpAG4AZQAgAEMAaABhAGgAaQBuAGUAIABhAG4AZAAgAE4AaQB6AGEAcgAgAFEAYQBuAGQAYQBoAABNb25vdHlwZSBEZXNpZ24gVGVhbSwgTmFkaW5lIENoYWhpbmUgYW5kIE5pemFyIFFhbmRhaAAARABlAHMAaQBnAG4AZQBkACAAYgB5ACAATQBvAG4AbwB0AHkAcABlACAARABlAHMAaQBnAG4AIABUAGUAYQBtACwAIABOAGEAZABpAG4AZQAgAEMAaABhAGgAaQBuAGUAIABhAG4AZAAgAE4AaQB6AGEAcgAgAFEAYQBuAGQAYQBoAABEZXNpZ25lZCBieSBNb25vdHlwZSBEZXNpZ24gVGVhbSwgTmFkaW5lIENoYWhpbmUgYW5kIE5pemFyIFFhbmRhaAAAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAGcAbwBvAGcAbABlAC4AYwBvAG0ALwBnAGUAdAAvAG4AbwB0AG8ALwAAaHR0cDovL3d3dy5nb29nbGUuY29tL2dldC9ub3RvLwAAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAG0AbwBuAG8AdAB5AHAAZQAuAGMAbwBtAC8AcwB0AHUAZABpAG8AAGh0dHA6Ly93d3cubW9ub3R5cGUuY29tL3N0dWRpbwAAVABoAGkAcwAgAEYAbwBuAHQAIABTAG8AZgB0AHcAYQByAGUAIABpAHMAIABsAGkAYwBlAG4AcwBlAGQAIAB1AG4AZABlAHIAIAB0AGgAZQAgAFMASQBMACAATwBwAGUAbgAgAEYAbwBuAHQAIABMAGkAYwBlAG4AcwBlACwAIABWAGUAcgBzAGkAbwBuACAAMQAuADEALgAgAFQAaABpAHMAIABGAG8AbgB0ACAAUwBvAGYAdAB3AGEAcgBlACAAaQBzACAAZABpAHMAdAByAGkAYgB1AHQAZQBkACAAbwBuACAAYQBuACAAIgBBAFMAIABJAFMAIgAgAEIAQQBTAEkAUwAsACAAVwBJAFQASABPAFUAVAAgAFcAQQBSAFIAQQBOAFQASQBFAFMAIABPAFIAIABDAE8ATgBEAEkAVABJAE8ATgBTACAATwBGACAAQQBOAFkAIABLAEkATgBEACwAIABlAGkAdABoAGUAcgAgAGUAeABwAHIAZQBzAHMAIABvAHIAIABpAG0AcABsAGkAZQBkAC4AIABTAGUAZQAgAHQAaABlACAAUwBJAEwAIABPAHAAZQBuACAARgBvAG4AdAAgAEwAaQBjAGUAbgBzAGUAIABmAG8AcgAgAHQAaABlACAAcwBwAGUAYwBpAGYAaQBjACAAbABhAG4AZwB1AGEAZwBlACwAIABwAGUAcgBtAGkAcwBzAGkAbwBuAHMAIABhAG4AZAAgAGwAaQBtAGkAdABhAHQAaQBvAG4AcwAgAGcAbwB2AGUAcgBuAGkAbgBnACAAeQBvAHUAcgAgAHUAcwBlACAAbwBmACAAdABoAGkAcwAgAEYAbwBuAHQAIABTAG8AZgB0AHcAYQByAGUALgAAVGhpcyBGb250IFNvZnR3YXJlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSBTSUwgT3BlbiBGb250IExpY2Vuc2UsIFZlcnNpb24gMS4xLiBUaGlzIEZvbnQgU29mdHdhcmUgaXMgZGlzdHJpYnV0ZWQgb24gYW4gIkFTIElTIiBCQVNJUywgV0lUSE9VVCBXQVJSQU5USUVTIE9SIENPTkRJVElPTlMgT0YgQU5ZIEtJTkQsIGVpdGhlciBleHByZXNzIG9yIGltcGxpZWQuIFNlZSB0aGUgU0lMIE9wZW4gRm9udCBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UsIHBlcm1pc3Npb25zIGFuZCBsaW1pdGF0aW9ucyBnb3Zlcm5pbmcgeW91ciB1c2Ugb2YgdGhpcyBGb250IFNvZnR3YXJlLgAAaAB0AHQAcAA6AC8ALwBzAGMAcgBpAHAAdABzAC4AcwBpAGwALgBvAHIAZwAvAE8ARgBMAABodHRwOi8vc2NyaXB0cy5zaWwub3JnL09GTAAATgBvAHQAbwAgAFMAYQBuAHMAIABBAHIAYQBiAGkAYwAATm90byBTYW5zIEFyYWJpYwAAVABoAGkAbgAAVGhpbgAAAgAAAAAAAP+cADIAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAAAAAQACAAQBAgEDAQQBBQEGAQcBCAEJAQoBCwEMAQ0BDgEPARABEQESARMBFAEVARYHdW5pMDYxRgd1bmkwNjIzB3VuaUZFOEQHdW5pRkU4RQd1bmlGRTkyB3VuaUZFOTcHdW5pRkVBMgd1bmlGRUEzB3VuaUZFQUEHdW5pRkVDQwd1bmlGRURCB3VuaUZFREQHdW5pRkVFMAd1bmlGRUUxB3VuaUZFRTMHdW5pRkVFNAd1bmlGRUU5B3VuaUZFRjIHdW5pRkVGMwd1bmlGRUY0B3VuaUZFRkMAAAAB//8AAgABAAIADgAAAB4AAAAyAAIAAgAFABcAAQAYABgAAgAOAAEABgABAAQAAQEEAAEAAQAYAAEAAgAAAAwAAAAQAAEAAAABAAAAAAABAAAACgBAAFoAAkRGTFQADmFyYWIAGgAEAAAAAP//AAEAAAAKAAFVUkQgABQAAP//AAIAAAABAAD//wABAAAAAmlzb2wADnJsaWcAFAAAAAEAAQAAAAEAAAACAAYADgAEAAkAAQASAAYACQACACIAQAABABIAAQAIAAEABAAYAAIABwABAAEAEAADAAEAEgABAA4AAAAAAAEAAAABAAQABQAHAAwAGAADAAAAAQAMAAAAAAABAAAAAQAAAAoAMABAAAJERkxUAA5hcmFiABoABAAAAAD//wABAAAABAAAAAD//wABAAAAAWtlcm4ACAAAAAIAAAACAAMACAAUACAACAAJAAMAIAA8AFgAAQAJAAMAcAB+AIwAAgAIAAEAlgADAAEAGAABABIAAAABAAAAAQABAAEABgABAAAAAwABABgAAQASAAAAAQAAAAEAAQABAAkAAQAAAAMAAQAgAAEAEgAAAAEAAAABAAEABQALAA4AEQASABQAAQAAAAEACAAE/+IAAQABAAkAAQAIAAT/5wABAAEABgABAAgABP/YAAEABQALAA4AEQASABQAAgBcAAQAAABMAFQABQAGAAD/0/+1AAD/vwAZAAAAAAAA//EAAAAAAAAAAAAA/90AAAAAAAD/8f/dAAD/0wAZAAD/8QAA/90AAP/nAAEAAAABAAAAAQAAAAEAAAABAAAAAAAAAAEAAAAA39bKXgAAAADb0h1TAAAAANvSTlw='
+  </script>
 </head>
 
 <body>
