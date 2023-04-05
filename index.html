@@ -14,7 +14,8 @@
   </style>
     <script src="p5.js"></script>
 <script>
-let x_padding;
+
+  let x_padding;
 let y_padding;
 let x_start = 20;
 let y_start = 20;
@@ -37,7 +38,8 @@ let has_message = true;
 // random pattern, has pattern, random variable, functions, filled
 let has_pattern = true;
 let pattern_random;
-let pattern_functions = [pattern_1, pattern_2, pattern_3, pattern_4, pattern_5, pattern_6, pattern_7];
+let pattern_random_2;
+let pattern_functions = [pattern_1, pattern_2, pattern_3, pattern_4, pattern_5, pattern_6, pattern_7, pattern_8];
 let pattern_filled = true;
 let chosen_pattern;
 
@@ -96,14 +98,14 @@ function getPatternPalette(index, baseHue) {
 
   R = new Random();
   let dir;
-  if (R.random_bool(.5)){
+  if (R.random_bool(.5)) {
     dir = 1;
-  } else{
+  } else {
     dir = -1;
   }
 
 
-  const hueVariations = [30*dir, 0, 330];
+  const hueVariations = [30 * dir, 0, 330];
   // const hueVariations = [0, 120, 180];
 
 
@@ -124,18 +126,31 @@ function generatePalette() {
   const baseHue = 0 + 30 * R.random_int(0, 9);
 
   let dir;
-  if (R.random_bool(.5)){
+  if (R.random_bool(.5)) {
     dir = 1;
-  } else{
+  } else {
     dir = -1;
   }
 
+  let mult;
+  if (R.random_bool(.5)) {
+    mult = 1;
+  } else {
+    mult = 2;
+  }
+
+  const bright = R.random_int(30, 95);
+  const d_s = bright - 85;
+  const sat = 50 - d_s;
   // if dark, B = 35;
 
   // Generate base color
   // const baseColor = generateColor(baseHue, 0, [15, 15], [85, 85]);
   //   const baseColor = generateColor(0, 0, [3,3], [97,97]);
-  const baseColor = generateColor(baseHue, 0, [50, 50], [85, 85]);
+
+  //  const baseColor = generateColor(baseHue, 0, [50, 50], [85, 85]);
+  const baseColor = generateColor(baseHue, 0, [sat, sat], [bright, bright]);
+
 
   //const baseColor = generateColor(344, 0, [75,75], [45,45]);
 
@@ -144,7 +159,7 @@ function generatePalette() {
 
   // Generate detail color
   //const detailColor = generateColor(baseHue, 315, [85, 85], [75, 75]);
-  const detailColor = generateColor(baseHue, 30*dir, [60, 60], [95, 95]);
+  const detailColor = generateColor(baseHue, 30 * dir * mult, [sat + 10, sat + 10], [bright + 10, bright + 10]);
 
   // Generate text color
   const textColor = generateColor(baseHue, 240, [65, 65], [40, 40]);
@@ -309,10 +324,10 @@ function setup() {
   //has_pattern = true;
 
   //has_pattern = true
-  if (has_pattern) chosen_pattern = R.random_int(0, 5);
+  if (has_pattern) chosen_pattern = R.random_int(0, 7);
   if (has_unfilled) chosen_pattern_unfilled = R.random_int(0, 5);
 
-  //chosen_pattern = 1;
+ // chosen_pattern = 7;
 
   pattern_filled = R.random_bool(0.5);
 
@@ -350,6 +365,7 @@ function setup() {
 
   striped_pattern = R.random_bool(.05);
 
+  pattern_random_2 = R.random_int(0, 100);
   // maybe check that the contrast between detail/text and base is enough
   // maybe include some random "inverse" color schemes, where everything is flipped: base becomes detail
 
@@ -539,12 +555,12 @@ function p_lines(dir, v1, v2, isframe, vector_array = []) {
   //  let pattern_random = randomGaussian(0,10);
   let line_amt = 5;
 
- /*  palette.base = [
-    palette.base[0]+ .1*v1.y,
-    palette.base[1],
-    palette.base[2] ,
-    palette.base[3],
-  ] */
+  /*  palette.base = [
+     palette.base[0]+ .1*v1.y,
+     palette.base[1],
+     palette.base[2] ,
+     palette.base[3],
+   ] */
 
   for (let l = 0; l < line_amt; l++) {
     push()
@@ -686,25 +702,31 @@ function p_lines(dir, v1, v2, isframe, vector_array = []) {
 
 // pattern 1, random vertical lines
 function pattern_1(w, r, v, dir) {
-  if ((v.x / w) * 100 % (2 + .1 * r) < 0.1) return true
+  const p_w = pattern_random_2 * 0.002;
+
+  // width = 0.1
+  if ((v.x / w) * 100 % (2 + .1 * r) < p_w) return true
 }
 
 // pattern 2, wave in the middle
 function pattern_2(w, r, v, dir) {
-  let d = v.dist(createVector(w / 2 + 50 * sin(v.y * (1 + .1 * r)), v.y))
-  d *= 1 / scale_variable
 
-  if (d < (100 + r) && d > 10) return true;
+  let d = v.dist(createVector(w / 2 + 50 * sin(v.y * (1 + .2 * r)), v.y))
+
+  if (d < (100 + pattern_random_2 * .4) && d > 10 + .1 * r) return true;
 }
 
 // pattern 3, diagonal stripes
 function pattern_3(w, r, v, dir) {
   let random_thickness = randomGaussian(200, 50);
-  let d = v.dist(createVector(v.y, v.y))
-  d *= 1 / scale_variable
 
-  if (sin(d * 5) * random_thickness * (1 / scale_variable) < 15 * (1 / scale_variable)
-    && sin(d * 5) * random_thickness * (1 / scale_variable) > -15 * (1 / scale_variable)) return true;
+  let mult = 1;
+  if (pattern_random_2 > 50) mult = -1;
+  
+  let d = v.dist(createVector(v.y*mult, v.y))
+
+  if (sin(d * 5) * random_thickness < 15 
+    && sin(d * 5) * random_thickness > -15) return true;
 }
 
 // pattern 4, diagonal circles
@@ -714,7 +736,6 @@ function pattern_4(w, r, v, dir) {
 
   if (v.y > v.x) d = .5 * v.dist(createVector(v.y, v.y)) + .5 * v.dist(createVector(-v.x, v.x))
   if (v.y < v.x) d = .5 * v.dist(createVector(v.y, v.y)) - .5 * v.dist(createVector(-v.x, v.x))
-  d *= 1 / scale_variable
 
   if (sin(d * 3.14) * random_thickness < 15 && sin(d * 3.14) * random_thickness > -15) return true;
 }
@@ -723,7 +744,6 @@ function pattern_4(w, r, v, dir) {
 function pattern_5(w, r, v, dir) {
   let random_thickness = randomGaussian(200, 50);
   let d = v.dist(createVector(v.y, v.y)) + v.dist(createVector(-v.x, v.x))
-  d *= 1 / scale_variable
 
   if (sin(d * 5) * random_thickness < 15 && sin(d * 5) * random_thickness > -15) return true;
 }
@@ -778,7 +798,7 @@ function pattern_7(w, r, v, dir) {
   let t_r = createVector(600, 0);
   let b_l = createVector(0, 800);
   let b_r = createVector(600, 800);
-  let dist_var = Math.abs(r) * 5;
+  let dist_var = 70 + pattern_random_2;
   if (
     v.dist(t_l) < dist_var ||
     v.dist(t_r) < dist_var ||
@@ -793,13 +813,12 @@ function pattern_8(w, r, v, dir) {
 
   let is_checkered = false;
   let grid = [0, 100, 200, 300, 400, 500, 600];
+
   for (let n = 0; n < grid.length - 1; n++) {
-    if (v.x - grid[n] < 20 && v.x - grid[n] > -20) is_checkered = true
+    if (v.x - grid[n] < 20 - 10*sin(.1*pattern_random_2*v.y) && v.x - grid[n] > -20 + 10*sin(.1*pattern_random_2*v.y)) is_checkered = true
   }
 
-  if (is_checkered
-
-    && v.y > y_start && v.y < height - y_start * 1.3) return true;
+  if (is_checkered && v.y > y_start && v.y < height - y_start * 1.3) return true;
 
 }
 
@@ -1081,6 +1100,8 @@ class Random {
 
 
 let base64Font = 'data:application/octet-stream;base64,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YwAgAFQAaABpAG4AAE5vdG8gU2FucyBBcmFiaWMgVGhpbgAAUgBlAGcAdQBsAGEAcgAAUmVndWxhcgAAMgAuADAAMAA0ADsARwBPAE8ARwA7AE4AbwB0AG8AUwBhAG4AcwBBAHIAYQBiAGkAYwAtAFQAaABpAG4AADIuMDA0O0dPT0c7Tm90b1NhbnNBcmFiaWMtVGhpbgAATgBvAHQAbwAgAFMAYQBuAHMAIABBAHIAYQBiAGkAYwAgAFQAaABpAG4AAE5vdG8gU2FucyBBcmFiaWMgVGhpbgAAVgBlAHIAcwBpAG8AbgAgADIALgAwADAANAAAVmVyc2lvbiAyLjAwNAAATgBvAHQAbwBTAGEAbgBzAEEAcgBhAGIAaQBjAC0AVABoAGkAbgAATm90b1NhbnNBcmFiaWMtVGhpbgAATgBvAHQAbwAgAGkAcwAgAGEAIAB0AHIAYQBkAGUAbQBhAHIAawAgAG8AZgAgAEcAbwBvAGcAbABlACAATABMAEMAAE5vdG8gaXMgYSB0cmFkZW1hcmsgb2YgR29vZ2xlIExMQwAATQBvAG4AbwB0AHkAcABlACAASQBtAGEAZwBpAG4AZwAgAEkAbgBjAC4AAE1vbm90eXBlIEltYWdpbmcgSW5jLgAATQBvAG4AbwB0AHkAcABlACAARABlAHMAaQBnAG4AIABUAGUAYQBtACwAIABOAGEAZABpAG4AZQAgAEMAaABhAGgAaQBuAGUAIABhAG4AZAAgAE4AaQB6AGEAcgAgAFEAYQBuAGQAYQBoAABNb25vdHlwZSBEZXNpZ24gVGVhbSwgTmFkaW5lIENoYWhpbmUgYW5kIE5pemFyIFFhbmRhaAAARABlAHMAaQBnAG4AZQBkACAAYgB5ACAATQBvAG4AbwB0AHkAcABlACAARABlAHMAaQBnAG4AIABUAGUAYQBtACwAIABOAGEAZABpAG4AZQAgAEMAaABhAGgAaQBuAGUAIABhAG4AZAAgAE4AaQB6AGEAcgAgAFEAYQBuAGQAYQBoAABEZXNpZ25lZCBieSBNb25vdHlwZSBEZXNpZ24gVGVhbSwgTmFkaW5lIENoYWhpbmUgYW5kIE5pemFyIFFhbmRhaAAAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAGcAbwBvAGcAbABlAC4AYwBvAG0ALwBnAGUAdAAvAG4AbwB0AG8ALwAAaHR0cDovL3d3dy5nb29nbGUuY29tL2dldC9ub3RvLwAAaAB0AHQAcAA6AC8ALwB3AHcAdwAuAG0AbwBuAG8AdAB5AHAAZQAuAGMAbwBtAC8AcwB0AHUAZABpAG8AAGh0dHA6Ly93d3cubW9ub3R5cGUuY29tL3N0dWRpbwAAVABoAGkAcwAgAEYAbwBuAHQAIABTAG8AZgB0AHcAYQByAGUAIABpAHMAIABsAGkAYwBlAG4AcwBlAGQAIAB1AG4AZABlAHIAIAB0AGgAZQAgAFMASQBMACAATwBwAGUAbgAgAEYAbwBuAHQAIABMAGkAYwBlAG4AcwBlACwAIABWAGUAcgBzAGkAbwBuACAAMQAuADEALgAgAFQAaABpAHMAIABGAG8AbgB0ACAAUwBvAGYAdAB3AGEAcgBlACAAaQBzACAAZABpAHMAdAByAGkAYgB1AHQAZQBkACAAbwBuACAAYQBuACAAIgBBAFMAIABJAFMAIgAgAEIAQQBTAEkAUwAsACAAVwBJAFQASABPAFUAVAAgAFcAQQBSAFIAQQBOAFQASQBFAFMAIABPAFIAIABDAE8ATgBEAEkAVABJAE8ATgBTACAATwBGACAAQQBOAFkAIABLAEkATgBEACwAIABlAGkAdABoAGUAcgAgAGUAeABwAHIAZQBzAHMAIABvAHIAIABpAG0AcABsAGkAZQBkAC4AIABTAGUAZQAgAHQAaABlACAAUwBJAEwAIABPAHAAZQBuACAARgBvAG4AdAAgAEwAaQBjAGUAbgBzAGUAIABmAG8AcgAgAHQAaABlACAAcwBwAGUAYwBpAGYAaQBjACAAbABhAG4AZwB1AGEAZwBlACwAIABwAGUAcgBtAGkAcwBzAGkAbwBuAHMAIABhAG4AZAAgAGwAaQBtAGkAdABhAHQAaQBvAG4AcwAgAGcAbwB2AGUAcgBuAGkAbgBnACAAeQBvAHUAcgAgAHUAcwBlACAAbwBmACAAdABoAGkAcwAgAEYAbwBuAHQAIABTAG8AZgB0AHcAYQByAGUALgAAVGhpcyBGb250IFNvZnR3YXJlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSBTSUwgT3BlbiBGb250IExpY2Vuc2UsIFZlcnNpb24gMS4xLiBUaGlzIEZvbnQgU29mdHdhcmUgaXMgZGlzdHJpYnV0ZWQgb24gYW4gIkFTIElTIiBCQVNJUywgV0lUSE9VVCBXQVJSQU5USUVTIE9SIENPTkRJVElPTlMgT0YgQU5ZIEtJTkQsIGVpdGhlciBleHByZXNzIG9yIGltcGxpZWQuIFNlZSB0aGUgU0lMIE9wZW4gRm9udCBMaWNlbnNlIGZvciB0aGUgc3BlY2lmaWMgbGFuZ3VhZ2UsIHBlcm1pc3Npb25zIGFuZCBsaW1pdGF0aW9ucyBnb3Zlcm5pbmcgeW91ciB1c2Ugb2YgdGhpcyBGb250IFNvZnR3YXJlLgAAaAB0AHQAcAA6AC8ALwBzAGMAcgBpAHAAdABzAC4AcwBpAGwALgBvAHIAZwAvAE8ARgBMAABodHRwOi8vc2NyaXB0cy5zaWwub3JnL09GTAAATgBvAHQAbwAgAFMAYQBuAHMAIABBAHIAYQBiAGkAYwAATm90byBTYW5zIEFyYWJpYwAAVABoAGkAbgAAVGhpbgAAAgAAAAAAAP+cADIAAAAAAAAAAAAAAAAAAAAAAAAAAAAZAAAAAQACAAQBAgEDAQQBBQEGAQcBCAEJAQoBCwEMAQ0BDgEPARABEQESARMBFAEVARYHdW5pMDYxRgd1bmkwNjIzB3VuaUZFOEQHdW5pRkU4RQd1bmlGRTkyB3VuaUZFOTcHdW5pRkVBMgd1bmlGRUEzB3VuaUZFQUEHdW5pRkVDQwd1bmlGRURCB3VuaUZFREQHdW5pRkVFMAd1bmlGRUUxB3VuaUZFRTMHdW5pRkVFNAd1bmlGRUU5B3VuaUZFRjIHdW5pRkVGMwd1bmlGRUY0B3VuaUZFRkMAAAAB//8AAgABAAIADgAAAB4AAAAyAAIAAgAFABcAAQAYABgAAgAOAAEABgABAAQAAQEEAAEAAQAYAAEAAgAAAAwAAAAQAAEAAAABAAAAAAABAAAACgBAAFoAAkRGTFQADmFyYWIAGgAEAAAAAP//AAEAAAAKAAFVUkQgABQAAP//AAIAAAABAAD//wABAAAAAmlzb2wADnJsaWcAFAAAAAEAAQAAAAEAAAACAAYADgAEAAkAAQASAAYACQACACIAQAABABIAAQAIAAEABAAYAAIABwABAAEAEAADAAEAEgABAA4AAAAAAAEAAAABAAQABQAHAAwAGAADAAAAAQAMAAAAAAABAAAAAQAAAAoAMABAAAJERkxUAA5hcmFiABoABAAAAAD//wABAAAABAAAAAD//wABAAAAAWtlcm4ACAAAAAIAAAACAAMACAAUACAACAAJAAMAIAA8AFgAAQAJAAMAcAB+AIwAAgAIAAEAlgADAAEAGAABABIAAAABAAAAAQABAAEABgABAAAAAwABABgAAQASAAAAAQAAAAEAAQABAAkAAQAAAAMAAQAgAAEAEgAAAAEAAAABAAEABQALAA4AEQASABQAAQAAAAEACAAE/+IAAQABAAkAAQAIAAT/5wABAAEABgABAAgABP/YAAEABQALAA4AEQASABQAAgBcAAQAAABMAFQABQAGAAD/0/+1AAD/vwAZAAAAAAAA//EAAAAAAAAAAAAA/90AAAAAAAD/8f/dAAD/0wAZAAD/8QAA/90AAP/nAAEAAAABAAAAAQAAAAEAAAABAAAAAAAAAAEAAAAA39bKXgAAAADb0h1TAAAAANvSTlw='
+  
+  
   </script>
 </head>
 
